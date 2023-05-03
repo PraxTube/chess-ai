@@ -1,0 +1,108 @@
+debug_info = {}
+
+def next_move(depth: int, board: chess.Board, debug=True) -> chess.Move:
+    debug_info.clear()
+    debug_info["nodes"] = 0
+    t_0 = time.time()
+
+    move = minimax_root(depth, board)
+
+    debug_info["time"] = time.time() - t_0
+    if debug == True:
+        print(f"\n------\nDebug Info:\n{debug_info}")
+    return move
+
+
+def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
+    """
+    Get legal moves.
+    Attempt to sort moves by best to worst.
+    Use piece values (and positional gains/losses) to weight captures.
+    """
+    end_game = check_end_game(board)
+
+    def orderer(move):
+        return evaluate_board(board, move)
+
+    in_order = sorted(
+        board.legal_moves, key=orderer, reverse=(board.turn == chess.WHITE)
+    )
+    return list(in_order)
+
+
+def minimax_root(depth: int, board: chess.Board) -> chess.Move:
+    maximize = board.turn == chess.WHITE
+    best_move = -float("inf") if maximize else float("inf")
+
+    moves = get_ordered_moves(board)
+
+    if len(moves) == 0:
+        raise Exception("Game is Over!")
+
+    best_move_found = moves[0]
+
+    for move in moves:
+        board.push(move)
+        value = minimax(depth - 1, board, -float("inf"), float("inf"), not maximize)
+        # Checking if draw can be claimed at this level, because the threefold repetition check
+        # can be expensive. This should help the bot avoid a draw if it's not favorable
+        # https://python-chess.readthedocs.io/en/latest/core.html#chess.Board.can_claim_draw
+        if board.can_claim_draw():
+            value = 0.0
+
+        board.pop()
+        if maximize and value >= best_move:
+            best_move = value
+            best_move_found = move
+        elif not maximize and value <= best_move:
+            best_move = value
+            best_move_found = move
+
+    return best_move_found
+
+
+def minimax(
+    depth: int,
+    board: chess.board,
+    alpha: float,
+    beta: float,
+    is_maximising_player: bool,
+) -> float:
+    """
+    core minimax logic.
+    https://en.wikipedia.org/wiki/minimax
+    """
+    debug_info["nodes"] += 1
+
+    if board.is_checkmate():
+        return -mate_score if is_maximising_player else mate_score
+    elif board.is_game_over():
+        return 0
+
+    if depth == 0:
+        return evaluate_board(board)
+
+    best_move = -float("inf")
+    moves = get_ordered_moves(board)
+
+    if is_maximising_player:
+        for move in moves:
+            board.push(move)
+            curr_move = minimax(depth - 1, board, alpha, beta, not is_maximising_player)
+            best_move = max(best_move, curr_move)
+            board.pop()
+
+            alpha = max(alpha, best_move)
+            if beta <= alpha:
+                return best_move
+    else:
+        for move in moves:
+            board.push(move)
+            curr_move = minimax(depth - 1, board, alpha, beta, not is_maximising_player)
+            best_move = min(best_move, curr_move)
+            board.pop()
+
+            beta = min(beta, best_move)
+            if beta <= alpha:
+                return best_move
+    return best_move
