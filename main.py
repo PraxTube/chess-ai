@@ -1,5 +1,6 @@
 import random
 import time
+from datetime import datetime
 from typing import Dict, List, Any
 
 import numpy as np
@@ -138,8 +139,22 @@ def print_board(best_move):
     print(f"Number of boards searched: {boards_searched}")
 
 
+def get_log_name():
+    date_str = datetime.today().strftime("%Y-%m-%d_%H:%M:%S")
+    log_file = f"log-{date_str}.txt"
+    return log_file
+
+
+def append_log_file(file_name, last_move):
+    with open(f"logs/{file_name}", "a") as f:
+        move_str = f"{last_move.uci()}\n"
+        f.writelines(move_str)
+
+
 def main():
     white_turn = True
+    log_file = get_log_name()
+
     while True:
         debug_info["nodes_searched"] = 0
 
@@ -150,6 +165,7 @@ def main():
         print_board(best_move)
 
         board.push(best_move)
+        append_log_file(log_file, best_move)
 
         white_turn = not white_turn
 
