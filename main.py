@@ -8,7 +8,7 @@ import chess
 
 
 board = chess.Board()
-debug_info = {"nodes_searched": 0}
+debug_info = {"nodes_searched": 0, "move_details": {}}
 
 
 def pull_random_move():
@@ -59,6 +59,7 @@ def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
     Attempt to sort moves by best to worst.
     Use piece values (and positional gains/losses) to weight captures.
     """
+
     def orderer(move):
         return evaluate_board(board, move)
 
@@ -104,9 +105,9 @@ def minimax(
     debug_info["nodes_searched"] += 1
 
     if board.is_checkmate():
-        return 0
+        pass
     elif board.is_game_over():
-        return 0
+        pass
 
     if depth == 0:
         return evaluate_board(board)
@@ -118,13 +119,17 @@ def minimax(
         for move in moves:
             board.push(move)
             curr_move = minimax(depth - 1, board, not is_maximising_player)
-            best_move = max(best_move, curr_move)
+            if curr_move > best_move:
+                best_move = curr_move
+                debug_info["move_details"][depth] = move
             board.pop()
     else:
         for move in moves:
             board.push(move)
             curr_move = minimax(depth - 1, board, not is_maximising_player)
-            best_move = min(best_move, curr_move)
+            if curr_move < best_move:
+                best_move = curr_move
+                debug_info["move_details"][depth] = move
             board.pop()
     return best_move
 
@@ -132,16 +137,24 @@ def minimax(
 def print_board(best_move):
     evaluation_ratio = evaluate_board(board)
     boards_searched = debug_info["nodes_searched"]
+    move_details = debug_info["move_details"]
     print("\n------------\n")
     print(board)
     print(f"\nCurrent Evaluation of the board is: {evaluation_ratio}")
     print(f"Best move has evaluation of {best_move}")
     print(f"Number of boards searched: {boards_searched}")
+    print(f"Move Details:\n{move_details}")
 
 
 def get_log_name():
     date_str = datetime.today().strftime("%Y-%m-%d_%H:%M:%S")
     log_file = f"log-{date_str}.txt"
+    return log_file
+
+
+def get_extensive_log_name():
+    date_str = datetime.today().strftime("%Y-%m-%d_%H:%M:%S")
+    log_file = f"log-details-{date_str}.txt"
     return log_file
 
 
@@ -151,23 +164,34 @@ def append_log_file(file_name, last_move):
         f.writelines(move_str)
 
 
+def append_extensive_log_file(file_name):
+    with open(f"logs/{file_name}", "a") as f:
+        reversed_moves = [x.uci() for x in debug_info["move_details"].values()]
+        reversed_moves.reverse()
+        moves = " ".join(reversed_moves)
+        content = f"{board.fen()},{moves}\n"
+        f.writelines(content)
+
+
 def main():
-    white_turn = True
+    depth = 3
+
     log_file = get_log_name()
+    extensive_log_file = get_extensive_log_name()
+    for i in range(1, depth):
+        debug_info["move_details"][i] = None
 
     while True:
         debug_info["nodes_searched"] = 0
 
-        best_move = minimax_root(3, board)
-
+        best_move = minimax_root(depth, board)
         if not best_move:
             print("\n\n\n-------\nGame Over\n\n----")
         print_board(best_move)
 
         board.push(best_move)
         append_log_file(log_file, best_move)
-
-        white_turn = not white_turn
+        append_extensive_log_file(extensive_log_file)
 
 
 def test():
