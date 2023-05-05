@@ -28,14 +28,14 @@ If you don't know how to do this, then you can simply run `git clone git@github.
 
 ## Milestone I - Dummy AI
 
-The deadline for this is either **11.5** or **18.5**.
+The deadline for this is the **11th Mai**.
 
 ### Coding TODO's
 
 - [x] Code Framework
-- [ ] Move Generator
+- [x] Move Generator
 - [x] Evaluation function
-- [ ] Time Management
+- [x] Time Management
 - [x] Pick move
 - [ ] Unit tests
 - [ ] Benchmarks
