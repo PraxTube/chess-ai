@@ -11,13 +11,6 @@ board = chess.Board()
 debug_info = {"nodes_searched": 0, "move_details": {}}
 
 
-def pull_random_move():
-    random_index = random.randint(0, board.legal_moves.count() - 1)
-    moves = [x for x in board.legal_moves]
-    move = str(moves[random_index])
-    board.push_san(move)
-
-
 def evaluate_board(board, move=None):
     if move:
         board.push(move)
@@ -34,12 +27,6 @@ def evaluate_board(board, move=None):
     return white_pieces.dot(multiplication_mask) - black_pieces.dot(multiplication_mask)
 
 
-def copy_mv(board, san_move):
-    new_board = board.copy()
-    new_board.push_san(san_move)
-    return new_board
-
-
 def next_move(depth: int, board: chess.Board, debug=True) -> chess.Move:
     debug_info.clear()
     debug_info["nodes"] = 0
@@ -54,12 +41,6 @@ def next_move(depth: int, board: chess.Board, debug=True) -> chess.Move:
 
 
 def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
-    """
-    Get legal moves.
-    Attempt to sort moves by best to worst.
-    Use piece values (and positional gains/losses) to weight captures.
-    """
-
     def orderer(move):
         return evaluate_board(board, move)
 
