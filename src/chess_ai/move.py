@@ -1,6 +1,8 @@
+import time
 from typing import Dict, List, Any
 
 # import numpy as np
+from tqdm import tqdm
 import chess
 
 from evaluate import evaluate_board
@@ -35,7 +37,13 @@ def minimax_root(depth: int, board: chess.Board) -> chess.Move:
 
     best_move_found = moves[0]
 
-    for move in moves:
+    start_time = time.time()
+    allocated_time = 1.0
+
+    for move in tqdm(moves, desc="Searching moves..."):
+        if time.time() - start_time >= allocated_time:
+            return best_move_found
+
         board.push(move)
         value = minimax(depth - 1, board, not maximize)
         if board.can_claim_draw():
