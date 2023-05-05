@@ -32,7 +32,7 @@ The deadline for this is either **11.5** or **18.5**.
 
 ### Coding TODO's
 
-- [ ] Code Framework
+- [x] Code Framework
 - [ ] Move Generator
 - [x] Evaluation function
 - [ ] Time Management
