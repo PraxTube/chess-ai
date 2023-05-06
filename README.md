@@ -1,6 +1,12 @@
 # Chess AI
 
+Basic chess ai that uses minimax to search for the best move to make.
+Given that it's written in python, the depth is very shallow
+(currently max depth is 3).
+
 ## Getting started
+
+Set up the project locally.
 
 ### Prerequisites
 
@@ -29,6 +35,8 @@ pyhton src/chess_ai/main.py
 
 ## Contributing
 
+How you can add your changes to this repo.
+
 ### Set up
 
 In order to contribute to this repo, you will need to set up and SSH key for you github
@@ -38,6 +46,13 @@ Note that you will want to change your `git remote origin` in your `chess-ai` fo
 you don't know how to do this, then you can simply run
 `git clone git@github.com:PraxTube/chess-ai.git` and then follow the steps above to set it
 up.
+
+### Adding a Pull Request
+
+In order to make changes you will need to work on your own [branch](https://git-scm.com/docs/git-branch).
+Once you created your local branch, you can [push it to github](https://docs.github.com/en/get-started/using-git/pushing-commits-to-a-remote-repository).
+When every task is completed, you can [create a pull request](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request).
+This will get reviewed and after potentially having to fix some issues, your branch will get merged in the master branch.
 
 ### Conventions
 
@@ -51,6 +66,21 @@ flake8 .
 
 The first one will automatically format you code in-place. If you prefer to see
 if it would change anything, you can use the flag `--check`.
+
+### CI
+
+This repo uses [github actions](https://docs.github.com/en/actions)
+to automatically run specific tests, see [here](https://github.com/PraxTube/chess-ai/actions).
+These tests will check the following:
+
+- Run unit tests
+- Check with black
+- Lint with flake8
+
+if any of these fail, then you will not be able to merge your PR into master.
+You should check if your commit passed the tests.
+
+Note that your branch will **only** be tested if you have an open **pull request** into master.
 
 ## Milestone I - Dummy AI
 
