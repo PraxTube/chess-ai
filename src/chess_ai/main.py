@@ -1,11 +1,8 @@
-import time
-
-import numpy as np
 import chess
 
-from move import next_move
-import inout
-import log
+from chess_ai.move import next_move
+from chess_ai import inout
+from chess_ai import log
 
 
 def main():

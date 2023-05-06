@@ -1,7 +1,5 @@
-import chess
-
-from evaluate import evaluate_board
-from log import debug_info
+from chess_ai.evaluate import evaluate_board
+from chess_ai.log import debug_info
 
 
 def print_board(board, best_move):
