@@ -9,9 +9,7 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 setup(
     name="chess-ai",
     version="0.1.0",
-    description=(
-        "A chess ai implementing minimax to find the best chess moves."
-    ),
+    description=("A chess ai implementing minimax to find the best chess moves."),
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/PraxTube/chess-ai",
