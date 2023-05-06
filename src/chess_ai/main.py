@@ -1,6 +1,3 @@
-import time
-
-import numpy as np
 import chess
 
 from chess_ai.move import next_move

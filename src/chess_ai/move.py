@@ -1,7 +1,6 @@
 import time
-from typing import Dict, List, Any
+from typing import List
 
-# import numpy as np
 from tqdm import tqdm
 import chess
 

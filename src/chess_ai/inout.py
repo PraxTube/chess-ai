@@ -1,5 +1,3 @@
-import chess
-
 from chess_ai.evaluate import evaluate_board
 from chess_ai.log import debug_info
 

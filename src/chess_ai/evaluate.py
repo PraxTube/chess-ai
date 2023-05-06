@@ -1,5 +1,4 @@
 import numpy as np
-import chess
 
 
 def evaluate_board(board, move=None):

@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import chess
-
 
 debug_info = {"nodes_searched": 0, "move_details": {}}
 
