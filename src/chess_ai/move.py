@@ -5,12 +5,13 @@ from typing import Dict, List, Any
 from tqdm import tqdm
 import chess
 
-from evaluate import evaluate_board
-from log import debug_info
+from chess_ai.evaluate import evaluate_board
+from chess_ai.log import debug_info
 
 
 def next_move(depth: int, board: chess.Board, debug=True) -> chess.Move:
-    debug_info["nodes_searched"] = 0
+    if debug:
+        debug_info["nodes_searched"] = 0
 
     move = minimax_root(depth, board)
     return move
