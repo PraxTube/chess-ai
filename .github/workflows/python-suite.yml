@@ -27,7 +27,7 @@ jobs:
         pip install -e .
     - name: Run Unit Tests
       run: |
-        pytest .
+        pytest . -vv
     - name: Check with black
       run: |
         black . --check
