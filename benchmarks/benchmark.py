@@ -6,6 +6,7 @@ import contextlib
 import chess
 
 from chess_ai import move
+from chess_ai import evaluate
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -36,56 +37,117 @@ def bench_legal_moves(board):
             board.legal_moves
 
 
+def bench_move(board, move):
+    with contextlib.redirect_stdout(suppress_prints()):
+        with contextlib.redirect_stderr(suppress_prints()):
+            board.push(move)
+            board.pop()
+
+
 def bench_best_move(depth, board):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
             move.next_move(depth, board)
 
 
-def benchmark_legal_moves():
-    print("\n==========\nBenchmark legal moves generation\n==========\n")
+def bench_evaluate(board, move=None):
+    with contextlib.redirect_stdout(suppress_prints()):
+        with contextlib.redirect_stderr(suppress_prints()):
+            evaluate.evaluate_board(board, move)
+
+
+def benchmark_template(msg, n, result_func, use_seconds):
+    print(f"\n==========\n{msg}\n==========\n")
     boards = get_boards()
 
     for board in boards:
-        number_of_runs = 10000
-        result = timeit.timeit(
-            lambda: bench_legal_moves(board),
-            number=number_of_runs,
-            globals=locals(),
-        )
+        result = result_func.__call__(board)
+
+        if use_seconds:
+            total_time = round(result, 4)
+            average_time = round(result / n * 1000, 2)
+        else:
+            total_time = round(result * 1000, 4)
+            average_time = round(result / n * 1000 * 1000, 2)
+
         print(
             "Total: {}ms, Average: {}µs - {} - {}".format(
-                round(result * 1000, 4),
-                round(result / number_of_runs * 1000 * 1000, 2),
+                total_time,
+                average_time,
                 board.legal_moves.count(),
                 board.fen().split()[0],
             )
         )
+
+
+def benchmark_legal_moves():
+    n = 10000
+
+    def bench(board):
+        return timeit.timeit(
+            lambda: bench_legal_moves(board),
+            number=n,
+            globals=locals(),
+        )
+
+    benchmark_template("Benchmark legal moves generation", n, bench, False)
+
+
+def benchmark_move():
+    n = 10000
+
+    def bench(board):
+        move = list(board.legal_moves)[0]
+        return timeit.timeit(
+            lambda: bench_move(board, move),
+            number=n,
+            globals=locals(),
+        )
+
+    benchmark_template("Benchmark making moves", n, bench, False)
+
+
+def benchmark_evaluate():
+    n = 1000
+
+    def bench_without_move(board):
+        return timeit.timeit(
+            lambda: bench_evaluate(board),
+            number=n,
+            globals=locals(),
+        )
+
+    def bench_with_move(board):
+        move = list(board.legal_moves)[0]
+        return timeit.timeit(
+            lambda: bench_evaluate(board, move),
+            number=n,
+            globals=locals(),
+        )
+
+    benchmark_template(
+        "Benchmark evaluate board WITHOUT move", n, bench_without_move, False
+    )
+    benchmark_template("Benchmark evaluate board WITH move", n, bench_with_move, False)
 
 
 def benchmark_best_move():
-    print("\n==========\nBenchmark best move generation\n==========\n")
-    boards = get_boards()
+    n = 100
 
-    for board in boards:
-        number_of_runs = 100
-        result = timeit.timeit(
+    def bench(board):
+        return timeit.timeit(
             lambda: bench_best_move(1, board),
-            number=number_of_runs,
+            number=n,
             globals=locals(),
         )
-        print(
-            "Total: {}s, Average: {}ms - {} - {}".format(
-                round(result, 4),
-                round(result / number_of_runs * 1000, 2),
-                board.legal_moves.count(),
-                board.fen().split()[0],
-            )
-        )
+
+    benchmark_template("Benchmark best move generation", n, bench, True)
 
 
 def benchmark():
     benchmark_legal_moves()
+    benchmark_move()
+    benchmark_evaluate()
     benchmark_best_move()
 
 
