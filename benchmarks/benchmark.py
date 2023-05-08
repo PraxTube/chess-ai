@@ -17,18 +17,19 @@ def suppress_prints():
     return StringIO()
 
 
-def get_boards():
-    with open(benchmark_file, "r") as f:
+def get_boards(file):
+    with open(os.path.join(script_dir, file), "r") as f:
         content = f.readlines()
-        boards = [chess.Board(x.split(";")[0]) for x in content]
+        boards = [chess.Board(x) for x in content]
         return boards
 
 
-def get_legal_moves():
-    with open(benchmark_file, "r") as f:
-        content = f.readlines()
-        legal_moves = [x.split(",")[1] for x in content]
-        return legal_moves
+def get_boards_list():
+    files = ["early_game_boards.txt", "mid_game_boards.txt", "late_game_boards.txt"]
+    boards_list = []
+    for file in files:
+        boards_list.append(get_boards(file))
+    return boards_list
 
 
 def bench_legal_moves(board):
@@ -56,22 +57,23 @@ def bench_evaluate(board, move=None):
             evaluate.evaluate_board(board, move)
 
 
-def benchmark_template(msg, n, result_func, use_seconds):
+def benchmark_template(msg, n, result_func, boards, use_seconds):
     print(f"\n==========\n{msg}\n==========\n")
-    boards = get_boards()
 
     for board in boards:
         result = result_func.__call__(board)
 
         if use_seconds:
+            msg = "Total: {}s, Average: {}ms - {} - {}"
             total_time = round(result, 4)
             average_time = round(result / n * 1000, 2)
         else:
+            msg = "Total: {}ms, Average: {}µs - {} - {}"
             total_time = round(result * 1000, 4)
             average_time = round(result / n * 1000 * 1000, 2)
 
         print(
-            "Total: {}ms, Average: {}µs - {} - {}".format(
+            msg.format(
                 total_time,
                 average_time,
                 board.legal_moves.count(),
@@ -80,7 +82,7 @@ def benchmark_template(msg, n, result_func, use_seconds):
         )
 
 
-def benchmark_legal_moves():
+def benchmark_legal_moves(boards):
     n = 10000
 
     def bench(board):
@@ -90,10 +92,10 @@ def benchmark_legal_moves():
             globals=locals(),
         )
 
-    benchmark_template("Benchmark legal moves generation", n, bench, False)
+    benchmark_template("Benchmark legal moves generation", n, bench, boards, False)
 
 
-def benchmark_move():
+def benchmark_move(boards):
     n = 10000
 
     def bench(board):
@@ -104,10 +106,10 @@ def benchmark_move():
             globals=locals(),
         )
 
-    benchmark_template("Benchmark making moves", n, bench, False)
+    benchmark_template("Benchmark making moves", n, bench, boards, False)
 
 
-def benchmark_evaluate():
+def benchmark_evaluate(boards):
     n = 1000
 
     def bench_without_move(board):
@@ -126,12 +128,14 @@ def benchmark_evaluate():
         )
 
     benchmark_template(
-        "Benchmark evaluate board WITHOUT move", n, bench_without_move, False
+        "Benchmark evaluate board WITHOUT move", n, bench_without_move, boards, False
     )
-    benchmark_template("Benchmark evaluate board WITH move", n, bench_with_move, False)
+    benchmark_template(
+        "Benchmark evaluate board WITH move", n, bench_with_move, boards, False
+    )
 
 
-def benchmark_best_move():
+def benchmark_best_move(boards):
     n = 100
 
     def bench(board):
@@ -141,14 +145,25 @@ def benchmark_best_move():
             globals=locals(),
         )
 
-    benchmark_template("Benchmark best move generation", n, bench, True)
+    benchmark_template("Benchmark best move generation", n, bench, boards, True)
 
 
 def benchmark():
-    benchmark_legal_moves()
-    benchmark_move()
-    benchmark_evaluate()
-    benchmark_best_move()
+    print("Initializing benchmarks...")
+    boards_list = get_boards_list()
+    prints_list = [
+        "\n--------------- EARLY GAME BOARDS ---------------\n\n",
+        "\n--------------- MID GAME BOARDS ---------------\n\n",
+        "\n--------------- LATE GAME BOARDS ---------------\n\n",
+    ]
+
+    for i in range(len(boards_list)):
+        print(prints_list[i])
+
+        benchmark_legal_moves(boards_list[i])
+        benchmark_move(boards_list[i])
+        benchmark_evaluate(boards_list[i])
+        benchmark_best_move(boards_list[i])
 
 
 if __name__ == "__main__":
