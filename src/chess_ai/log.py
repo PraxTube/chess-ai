@@ -8,13 +8,13 @@ debug_info = {"nodes_searched": 0, "move_details": {}}
 
 
 def get_log_file():
-    date_str = datetime.today().strftime("%Y-%m-%d_%H:%M:%S")
+    date_str = datetime.today().strftime("%Y-%m-%d_%H-%M-%S")
     log_file = f"log-{date_str}.txt"
     return log_file
 
 
 def get_extensive_log_file():
-    date_str = datetime.today().strftime("%Y-%m-%d_%H:%M:%S")
+    date_str = datetime.today().strftime("%Y-%m-%d_%H-%M-%S")
     log_file = f"log-details-{date_str}.txt"
     return log_file
 
