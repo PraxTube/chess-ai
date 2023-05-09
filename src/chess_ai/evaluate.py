@@ -2,11 +2,10 @@ import numpy as np
 
 
 def evaluate_board(board, move=None):
-    return 0
     if move:
         board.makeMove(move)
         fen_string = board.fen().split()[0]
-        board.unmakeMove()
+        board.undoMove()
     else:
         fen_string = board.fen().split()[0]
 
