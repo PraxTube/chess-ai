@@ -1,0 +1,153 @@
+Initializing benchmarks...
+
+--------------- EARLY GAME BOARDS ---------------
+
+
+
+==========
+Benchmark legal moves generation
+==========
+
+Total: 30.678ms, Average: 3.07µs - 20 - rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+Total: 28.8012ms, Average: 2.88µs - 18 - rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R
+
+==========
+Benchmark making moves
+==========
+
+Total: 112.449ms, Average: 11.24µs - 20 - rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+Total: 114.0862ms, Average: 11.41µs - 18 - rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R
+
+==========
+Benchmark evaluate board WITHOUT move
+==========
+
+Total: 79.0153ms, Average: 79.02µs - 20 - rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+Total: 77.6212ms, Average: 77.62µs - 18 - rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R
+
+==========
+Benchmark evaluate board WITH move
+==========
+
+Total: 87.7827ms, Average: 87.78µs - 20 - rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+Total: 87.6895ms, Average: 87.69µs - 18 - rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R
+
+==========
+Benchmark best move generation
+==========
+
+Total: 0.9526s, Average: 9.53ms - 20 - rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
+Total: 1.145s, Average: 11.45ms - 18 - rnbqkbnr/1pppppp1/p6p/8/2B1P3/5N2/PPPP1PPP/RNBQK2R
+
+--------------- MID GAME BOARDS ---------------
+
+
+
+==========
+Benchmark legal moves generation
+==========
+
+Total: 29.3745ms, Average: 2.94µs - 38 - r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1
+Total: 29.1931ms, Average: 2.92µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+Total: 29.1451ms, Average: 2.91µs - 46 - r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R
+Total: 29.072ms, Average: 2.91µs - 33 - 6k1/p1p2pp1/nr1b3n/3P2N1/1pB2R2/4P2b/PP1B1P1P/3K4
+Total: 29.265ms, Average: 2.93µs - 31 - R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1
+Total: 28.9572ms, Average: 2.9µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+
+==========
+Benchmark making moves
+==========
+
+Total: 119.8043ms, Average: 11.98µs - 38 - r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1
+Total: 111.8281ms, Average: 11.18µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+Total: 113.6523ms, Average: 11.37µs - 46 - r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R
+Total: 111.1007ms, Average: 11.11µs - 33 - 6k1/p1p2pp1/nr1b3n/3P2N1/1pB2R2/4P2b/PP1B1P1P/3K4
+Total: 116.4201ms, Average: 11.64µs - 31 - R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1
+Total: 110.296ms, Average: 11.03µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+
+==========
+Benchmark evaluate board WITHOUT move
+==========
+
+Total: 70.3621ms, Average: 70.36µs - 38 - r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1
+Total: 68.5905ms, Average: 68.59µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+Total: 76.6386ms, Average: 76.64µs - 46 - r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R
+Total: 62.5538ms, Average: 62.55µs - 33 - 6k1/p1p2pp1/nr1b3n/3P2N1/1pB2R2/4P2b/PP1B1P1P/3K4
+Total: 72.2906ms, Average: 72.29µs - 31 - R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1
+Total: 68.7546ms, Average: 68.75µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+
+==========
+Benchmark evaluate board WITH move
+==========
+
+Total: 82.5918ms, Average: 82.59µs - 38 - r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1
+Total: 78.1065ms, Average: 78.11µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+Total: 87.6066ms, Average: 87.61µs - 46 - r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R
+Total: 73.467ms, Average: 73.47µs - 33 - 6k1/p1p2pp1/nr1b3n/3P2N1/1pB2R2/4P2b/PP1B1P1P/3K4
+Total: 82.2758ms, Average: 82.28µs - 31 - R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1
+Total: 78.803ms, Average: 78.8µs - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+
+==========
+Benchmark best move generation
+==========
+
+Total: 2.3341s, Average: 23.34ms - 38 - r1b2rk1/ppqn1ppp/2n1p3/3pP3/1b1P4/3B1N2/PP1N1PPP/R1BQR1K1
+Total: 1.0714s, Average: 10.71ms - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+Total: 3.7897s, Average: 37.9ms - 46 - r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R
+Total: 1.9801s, Average: 19.8ms - 33 - 6k1/p1p2pp1/nr1b3n/3P2N1/1pB2R2/4P2b/PP1B1P1P/3K4
+Total: 1.9382s, Average: 19.38ms - 31 - R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1
+Total: 1.0257s, Average: 10.26ms - 21 - r3k1nr/pp3ppp/3p4/3P4/8/3P4/PP3PPP/RN2K2R
+
+--------------- LATE GAME BOARDS ---------------
+
+
+
+==========
+Benchmark legal moves generation
+==========
+
+Total: 29.5375ms, Average: 2.95µs - 18 - 8/2k5/R7/2PK1p1p/1p4r1/1P6/P5P1/8
+Total: 29.8623ms, Average: 2.99µs - 16 - 6k1/B5q1/KR6/8/8/8/6p1/8
+Total: 29.5938ms, Average: 2.96µs - 7 - 4k3/8/8/3PP3/3pp3/8/8/3K4
+Total: 29.3096ms, Average: 2.93µs - 30 - 3k4/5ppp/2q5/3p2r1/8/1Q3P2/P4P1P/3R3K
+Total: 29.2943ms, Average: 2.93µs - 25 - 8/1k1r1n2/5P2/3p4/3P4/6B1/2R2K2/8
+
+==========
+Benchmark making moves
+==========
+
+Total: 112.7404ms, Average: 11.27µs - 18 - 8/2k5/R7/2PK1p1p/1p4r1/1P6/P5P1/8
+Total: 116.6214ms, Average: 11.66µs - 16 - 6k1/B5q1/KR6/8/8/8/6p1/8
+Total: 119.307ms, Average: 11.93µs - 7 - 4k3/8/8/3PP3/3pp3/8/8/3K4
+Total: 117.2256ms, Average: 11.72µs - 30 - 3k4/5ppp/2q5/3p2r1/8/1Q3P2/P4P1P/3R3K
+Total: 115.3698ms, Average: 11.54µs - 25 - 8/1k1r1n2/5P2/3p4/3P4/6B1/2R2K2/8
+
+==========
+Benchmark evaluate board WITHOUT move
+==========
+
+Total: 53.11ms, Average: 53.11µs - 18 - 8/2k5/R7/2PK1p1p/1p4r1/1P6/P5P1/8
+Total: 47.7123ms, Average: 47.71µs - 16 - 6k1/B5q1/KR6/8/8/8/6p1/8
+Total: 47.6657ms, Average: 47.67µs - 7 - 4k3/8/8/3PP3/3pp3/8/8/3K4
+Total: 56.1411ms, Average: 56.14µs - 30 - 3k4/5ppp/2q5/3p2r1/8/1Q3P2/P4P1P/3R3K
+Total: 52.0189ms, Average: 52.02µs - 25 - 8/1k1r1n2/5P2/3p4/3P4/6B1/2R2K2/8
+
+==========
+Benchmark evaluate board WITH move
+==========
+
+Total: 67.7603ms, Average: 67.76µs - 18 - 8/2k5/R7/2PK1p1p/1p4r1/1P6/P5P1/8
+Total: 64.7717ms, Average: 64.77µs - 16 - 6k1/B5q1/KR6/8/8/8/6p1/8
+Total: 63.6977ms, Average: 63.7µs - 7 - 4k3/8/8/3PP3/3pp3/8/8/3K4
+Total: 70.4603ms, Average: 70.46µs - 30 - 3k4/5ppp/2q5/3p2r1/8/1Q3P2/P4P1P/3R3K
+Total: 63.016ms, Average: 63.02µs - 25 - 8/1k1r1n2/5P2/3p4/3P4/6B1/2R2K2/8
+
+==========
+Benchmark best move generation
+==========
+
+Total: 0.7183s, Average: 7.18ms - 18 - 8/2k5/R7/2PK1p1p/1p4r1/1P6/P5P1/8
+Total: 0.7895s, Average: 7.9ms - 16 - 6k1/B5q1/KR6/8/8/8/6p1/8
+Total: 0.2241s, Average: 2.24ms - 7 - 4k3/8/8/3PP3/3pp3/8/8/3K4
+Total: 1.7335s, Average: 17.33ms - 30 - 3k4/5ppp/2q5/3p2r1/8/1Q3P2/P4P1P/3R3K
+Total: 0.8608s, Average: 8.61ms - 25 - 8/1k1r1n2/5P2/3p4/3P4/6B1/2R2K2/8
