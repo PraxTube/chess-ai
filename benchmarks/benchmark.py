@@ -19,7 +19,7 @@ def suppress_prints():
 def get_boards(file):
     with open(os.path.join(script_dir, file), "r") as f:
         content = f.readlines()
-        boards = [chess.GameState() for x in content]
+        boards = [chess.GameState(x) for x in content]
         return boards
 
 

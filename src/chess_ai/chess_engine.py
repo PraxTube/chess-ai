@@ -1,43 +1,9 @@
 class GameState:
-    def __init__(self):
-        self.board = [
-            ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
-            ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["--", "--", "--", "--", "--", "--", "--", "--"],
-            ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
-            ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
-        ]
-        self.moveFunctions = {
-            "p": self.getPawnMoves,
-            "R": self.getRookMoves,
-            "N": self.getKnightMoves,
-            "B": self.getBishopMoves,
-            "Q": self.getQueenMoves,
-            "K": self.getKingMoves,
-        }
-        self.white_to_move = True
-        self.move_log = []
-        self.white_king_location = (7, 4)
-        self.black_king_location = (0, 4)
-        self.checkmate = False
-        self.stalemate = False
-        self.in_check = False
-        self.pins = []
-        self.checks = []
-        self.enpassant_possible = ()
-        self.enpassant_possible_log = [self.enpassant_possible]
-        self.current_castling_rights = CastleRights(True, True, True, True)
-        self.castle_rights_log = [
-            CastleRights(
-                self.current_castling_rights.wks,
-                self.current_castling_rights.bks,
-                self.current_castling_rights.wqs,
-                self.current_castling_rights.bqs,
-            )
-        ]
+    def __init__(self, fen_board=None):
+        if not fen_board:
+            self.setup_default_board()
+        else:
+            self.setup_fen_board(fen_board)
 
     def __str__(self):
         result = ""
@@ -87,6 +53,117 @@ class GameState:
         fen += "0 1"
 
         return fen
+
+    def fen_to_board(self, fen):
+        board = [["--"] * 8 for _ in range(8)]
+        fen_board = fen.split(" ")[0]
+
+        rank_strs = fen_board.split("/")
+        for i, rank_str in enumerate(rank_strs):
+            file_idx = 0
+            for char in rank_str:
+                if char.isdigit():
+                    file_idx += int(char)
+                else:
+                    board[i][file_idx] = char
+                    file_idx += 1
+
+        for rank in board:
+            for i, square in enumerate(rank):
+                if square == "--":
+                    continue
+
+                if square.islower():
+                    c = "p" if square == "p" else square.upper()
+                    rank[i] = "b" + c
+                else:
+                    c = "p" if square == "P" else square.upper()
+                    rank[i] = "w" + c
+        return board
+
+    def setup_default_board(self):
+        self.board = [
+            ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
+            ["bp", "bp", "bp", "bp", "bp", "bp", "bp", "bp"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["--", "--", "--", "--", "--", "--", "--", "--"],
+            ["wp", "wp", "wp", "wp", "wp", "wp", "wp", "wp"],
+            ["wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR"],
+        ]
+        self.moveFunctions = {
+            "p": self.getPawnMoves,
+            "R": self.getRookMoves,
+            "N": self.getKnightMoves,
+            "B": self.getBishopMoves,
+            "Q": self.getQueenMoves,
+            "K": self.getKingMoves,
+        }
+        self.white_to_move = True
+        self.move_log = []
+        self.white_king_location = (7, 4)
+        self.black_king_location = (0, 4)
+        self.checkmate = False
+        self.stalemate = False
+        self.in_check = False
+        self.pins = []
+        self.checks = []
+        self.enpassant_possible = ()
+        self.enpassant_possible_log = [self.enpassant_possible]
+        self.current_castling_rights = CastleRights(True, True, True, True)
+        self.castle_rights_log = [
+            CastleRights(
+                self.current_castling_rights.wks,
+                self.current_castling_rights.bks,
+                self.current_castling_rights.wqs,
+                self.current_castling_rights.bqs,
+            )
+        ]
+
+    def setup_fen_board(self, fen_board):
+        self.board = self.fen_to_board(fen_board)
+        self.moveFunctions = {
+            "p": self.getPawnMoves,
+            "R": self.getRookMoves,
+            "N": self.getKnightMoves,
+            "B": self.getBishopMoves,
+            "Q": self.getQueenMoves,
+            "K": self.getKingMoves,
+        }
+        self.white_to_move = fen_board.split()[1] == "w"
+        self.white_king_location = self.find_piece("wK")
+        self.black_king_location = self.find_piece("bK")
+        self.checkmate = False
+        self.stalemate = False
+        self.in_check = False
+        fen_castle_rights = fen_board.split()[2]
+        self.current_castling_rights = CastleRights(
+            "K" in fen_castle_rights,
+            "k" in fen_castle_rights,
+            "Q" in fen_castle_rights,
+            "q" in fen_castle_rights,
+        )
+        self.pins = []
+        self.checks = []
+        self.enpassant_possible = ()
+        self.move_log = []
+        self.enpassant_possible_log = [self.enpassant_possible]
+        self.castle_rights_log = [
+            CastleRights(
+                self.current_castling_rights.wks,
+                self.current_castling_rights.bks,
+                self.current_castling_rights.wqs,
+                self.current_castling_rights.bqs,
+            )
+        ]
+
+    def find_piece(self, piece):
+        for row in range(len(self.board)):
+            for col in range(len(self.board[0])):
+                if self.board[row][col] == piece:
+                    return (row, col)
+        raise ValueError("The given piece is no longer on the board", self.board, piece)
 
     def makeMove(self, move):
         self.board[move.start_row][move.start_col] = "--"
@@ -683,8 +760,17 @@ class GameState:
                         self.black_king_location = (row, col)
 
     def getCastleMoves(self, row, col, moves):
+        if (
+            not self.current_castling_rights.wks
+            and not self.current_castling_rights.bks
+            and not self.current_castling_rights.wqs
+            and not self.current_castling_rights.bqs
+        ):
+            pass
+
         if self.squareUnderAttack(row, col):
             return  # can't castle while in check
+
         if (self.white_to_move and self.current_castling_rights.wks) or (
             not self.white_to_move and self.current_castling_rights.bks
         ):
