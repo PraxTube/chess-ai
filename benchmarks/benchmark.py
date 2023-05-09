@@ -31,6 +31,12 @@ def get_boards_list():
     return boards_list
 
 
+def bench_to_fen(board):
+    with contextlib.redirect_stdout(suppress_prints()):
+        with contextlib.redirect_stderr(suppress_prints()):
+            board.fen()
+
+
 def bench_legal_moves(board):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
@@ -76,9 +82,22 @@ def benchmark_template(msg, n, result_func, boards, use_seconds):
                 total_time,
                 average_time,
                 len(board.getValidMoves()),
-                str(board),
+                board.fen(),
             )
         )
+
+
+def benchmark_to_fen(boards):
+    n = 10000
+
+    def bench(board):
+        return timeit.timeit(
+            lambda: bench_to_fen(board),
+            number=n,
+            globals=locals(),
+        )
+
+    benchmark_template("Benchmark to fen string conversion", n, bench, boards, False)
 
 
 def benchmark_legal_moves(boards):
@@ -159,6 +178,7 @@ def benchmark():
     for i in range(len(boards_list)):
         print(prints_list[i])
 
+        benchmark_to_fen(boards_list[i])
         benchmark_legal_moves(boards_list[i])
         benchmark_move(boards_list[i])
         benchmark_evaluate(boards_list[i])

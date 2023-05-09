@@ -20,9 +20,7 @@ def get_ordered_moves(board: chess.GameState) -> List[chess.Move]:
     def orderer(move):
         return evaluate_board(board, move)
 
-    in_order = sorted(
-        board.getValidMoves(), key=orderer, reverse=(board.white_to_move)
-    )
+    in_order = sorted(board.getValidMoves(), key=orderer, reverse=(board.white_to_move))
     return list(in_order)
 
 

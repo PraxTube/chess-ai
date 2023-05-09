@@ -5,7 +5,7 @@ from chess_ai import log
 
 
 def main():
-    depth = 3
+    depth = 4
     board = chess.GameState()
 
     for i in range(1, depth):
