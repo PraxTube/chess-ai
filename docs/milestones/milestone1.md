@@ -47,31 +47,14 @@ wanted to use python instead.
 
 ## Benchmarks
 
-\begin{table}[ht!]%
-	\caption{Benchmark TEST}
-	\label{tab:benchmark}
-	\centering %
-	\begin{tabular}{cccc}
-		\toprule
-		1 & 2 & 3 & 4 \\ \toprule
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\ \midrule[0.1mm]
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\ \midrule[0.1mm]
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\ \midrule[0.1mm]
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\ \midrule[0.1mm]
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\
-		1 & 2 & 3 & 4 \\ \midrule[0.1mm]
-		1 & 2 & 3 & 4 \\ \bottomrule
-	\end{tabular}
-\end{table}
+<p align="center">
+  <img src="table.svg" alt="Table SVG Image">
+</p>
+
+The used mid-game board is
+`r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b KQkq - 0 1`
+and the late-game board is
+`4k3/8/8/3PP3/3pp3/8/8/3K4 w - - 0 1`.
 
 - Show Benchmarks
 - also show python-chess benchmarks, and mention that those are slower
