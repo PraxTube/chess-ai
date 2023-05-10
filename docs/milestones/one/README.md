@@ -54,7 +54,7 @@ The benchmarks in the table below have the following categories
 - **Evaluate Board** Evaluate the board, here a simple material calculation
 - **Best Move Search** Find the best move of a given board, with depth 1
 
-The board that were used
+The boards that were used
 
 - **Early-Game** 
   `rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1`
@@ -64,7 +64,7 @@ The board that were used
   `4k3/8/8/3PP3/3pp3/8/8/3K4 w - - 0 1`.
 
 <p align="center">
-  <img src="table.svg" alt="Table SVG Image">
+  <img src="benchmark-table.svg" alt="Table SVG Image">
 </p>
 
 Interesting to note is that the evaluation function
@@ -89,13 +89,84 @@ amount. However given that python-chess uses `0x88` as a backend
 and the current engine uses arrays, this will most likely not be
 possible.
 
+The chess engine also doesn't yet implement
+king of the hill win conditions.
+
 ## Dummy AI
 
-- What can the AI do?
-- Where are already potential bottlenecks?
+The AI in it's current state can do the following
+
+1. Communicate with the chess engine
+1. Use the engine and minimax to find the best move
+1. Basic evaluation using board material
+1. Debug certain info about the game (current state and history)
+
+There is a lot of room for improvement, mainly in the
+best move search and the evaluation.
 
 ## Future Improvements
 
-- state how to address the bottlenecks
-- how the benchmarks will most likely change with the development of the AI
-- What worked well and what did not (for instance benchmarks useful, unit tests too)
+The main goal of improving this project is to increase performance
+of the AI to allow for faster search of the best move.
+The second goal is to keep maintainability as high as possible.
+The following changes are going to address both of these goals.
+
+### Engine Improvements
+
+The engine in it's current state is very shaky and hard to read.
+Docstring's would greatly help to understand the code, but are
+to early as the engine is still going to be greatly refactored.
+Another problem are huge `if-else` blocks. This can be
+somewhat fixed through Guard Clauses. Another problem is that
+there are many redundant or inefficient parts in the engine.
+In order to address these issues, the following changes will
+be implemented in the near future (hopefully till the next
+milestone, but it's questionable if the time will be enough)
+
+- Remove redundant classes
+- Use more efficient data structures (`numpy.array`)
+- Be consistent in the naming (`snake_casing`)
+- Implement more Guard Clauses
+- Split functions into smaller functions in order to try to reduce state
+- ...
+
+There are still many more improvements that can be made,
+however for the time being the ones listed are already going to be
+quite the time investment.
+
+### AI Improvements
+
+The AI doesn't have as many problems as the engine.
+For the AI there are however still many changes that can be made
+
+- Use `numpy.array` in the evaluation function
+- Implement alpha-beta search
+- Use better time management (move specific)
+- Create a better evaluation function
+    - Use piece to board aware array masks
+    - Use check as a meassure
+    - Use capture as a meassure
+- Better move ordering
+- Possibly cache the last found best move
+
+## Final remarks
+
+Many things went rather roughly, such as
+
+- Team coordination (mainly due to the fact that only really
+  one person can work on the engine)
+- Writing the chess engine and debugging it
+- Writing unit tests this early wasn't very useful
+- Getting started was the hardest part, as we didn't quite
+  know what to do (where to begin)
+
+However there were also things that proofed to be very useful
+
+- Benchmarking is extremely valuable
+- Writing debugging tools early can pay of (same with logging tools)
+- Failing fast (using python-chess to code up a simple AI) created
+  a good base knowledge about what needs to be done
+- Writing good git commits is extremely useful for both
+  documentation (like this one) and overall work flow
+
+An overall very teaching experience.
