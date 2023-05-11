@@ -3,9 +3,9 @@ import numpy as np
 
 def evaluate_board(board, move=None):
     if move:
-        board.push(move)
+        board.makeMove(move)
         fen_string = board.fen().split()[0]
-        board.pop()
+        board.undoMove()
     else:
         fen_string = board.fen().split()[0]
 

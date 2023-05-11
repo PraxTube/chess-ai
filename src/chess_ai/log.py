@@ -21,16 +21,16 @@ def get_extensive_log_file():
 
 def append_log_file(last_move):
     with open(os.path.join(main_dir, "logs", log_file), "a") as f:
-        move_str = f"{last_move.uci()}\n"
+        move_str = f"{str(last_move)}\n"
         f.writelines(move_str)
 
 
 def append_extensive_log_file(board):
     with open(os.path.join(main_dir, "logs", extensive_log_file), "a") as f:
-        reversed_moves = [x.uci() for x in debug_info["move_details"].values()]
+        reversed_moves = [str(x) for x in debug_info["move_details"].values()]
         reversed_moves.reverse()
         moves = " ".join(reversed_moves)
-        content = f"{board.fen()},{moves}\n"
+        content = f"{board},{moves}\n"
         f.writelines(content)
 
 
