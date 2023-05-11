@@ -88,17 +88,17 @@ The deadline for this is the **11th Mai**.
 
 ### Coding TODO's
 
-- \[x\] Code Framework
-- \[x\] Move Generator
-- \[x\] Evaluation function
-- \[x\] Time Management
-- \[x\] Pick move
-- \[ \] Unit tests
-- \[ \] Benchmarks
+- [x] Code Framework
+- [x] Move Generator
+- [x] Evaluation function
+- [x] Time Management
+- [x] Pick move
+- [ ] Unit tests
+- [x] Benchmarks
 
 ### Documentation TODO's
 
-- \[ \] Class diagram
-- \[ \] Plots of benchmarks
-- \[ \] Future plans
-- \[ \] Screencast
+- [ ] Class diagram
+- [x] ~~Plots of benchmarks~~ Tables of benchmarks
+- [x] Future plans
+- [ ] Screencast
