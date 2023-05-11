@@ -93,12 +93,12 @@ The deadline for this is the **11th Mai**.
 - [x] Evaluation function
 - [x] Time Management
 - [x] Pick move
-- [ ] Unit tests
+- [x] Unit tests
 - [x] Benchmarks
 
 ### Documentation TODO's
 
-- [ ] Class diagram
+- [x] Class diagram
 - [x] ~~Plots of benchmarks~~ Tables of benchmarks
 - [x] Future plans
-- [ ] Screencast
+- [x] Screencast

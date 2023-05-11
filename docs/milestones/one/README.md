@@ -18,6 +18,10 @@ The current chess engine was mainly inspired by
 which was in turn inspired by
 [this YouTube series](https://www.youtube.com/watch?v=EnYui0e73Rs&list=PLBwF487qi8MGU81nDGaeNE1EnNEPYWKY_).
 
+<p align="center">
+  <img src="class_diagram.svg" alt="Class Diagram SVG Image">
+</p>
+
 Before I started writing the current backend, I first used the
 [python-chess](https://github.com/niklasf/python-chess) library
 as the chess backend. Even though we aren't supposed to use it and I
