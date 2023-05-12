@@ -71,6 +71,12 @@ The boards that were used
   <img src="benchmark-table.svg" alt="Table SVG Image">
 </p>
 
+The tests were run on a PC with the following specs
+
+- CPU: Intel i5-4590, Threads: 4, Cores: 4, 3.7GHz
+
+- RAM: 24GB DDR3
+
 Interesting to note is that the evaluation function
 should be the same for both. The only reason they could be
 different, is that the fen string of the python-chess is
