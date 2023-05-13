@@ -82,23 +82,12 @@ You should check if your commit passed the tests.
 
 Note that your branch will **only** be tested if you have an open **pull request** into master.
 
-## Milestone I - Dummy AI
+## Milestone II - Basic AI
 
-The deadline for this is the **11th Mai**.
+The deadline for this is the **18th Mai**.
 
-### Coding TODO's
-
-- [x] Code Framework
-- [x] Move Generator
-- [x] Evaluation function
-- [x] Time Management
-- [x] Pick move
-- [x] Unit tests
-- [x] Benchmarks
-
-### Documentation TODO's
-
-- [x] Class diagram
-- [x] ~~Plots of benchmarks~~ Tables of benchmarks
-- [x] Future plans
-- [x] Screencast
+- [ ] Alpha-beta search
+- [ ] Sophisticated evaluation function
+- [ ] Unit tests for legal moves
+- [ ] Unit tests for chess engine
+- [ ] Benchmarks that test different depths
