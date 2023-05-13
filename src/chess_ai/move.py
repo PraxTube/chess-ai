@@ -36,53 +36,73 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
     best_move_found = moves[0]
 
     start_time = time.time()
-    allocated_time = 1.0
+    allocated_time = 100
 
     for move in tqdm(moves, desc="Searching moves..."):
         if time.time() - start_time >= allocated_time:
             return best_move_found
 
         board.makeMove(move)
-        value = minimax(depth - 1, board, not maximize)
-
+        value = alpha_beta(depth - 1, board, not maximize)
         board.undoMove()
+
         if maximize and value >= best_move:
             best_move = value
             best_move_found = move
         elif not maximize and value <= best_move:
             best_move = value
             best_move_found = move
-
     return best_move_found
 
 
-def minimax(
+def alpha_beta(
     depth: int,
     board: chess.GameState,
     is_maximising_player: bool,
 ) -> float:
+    if is_maximising_player:
+        return alpha_beta_max(-float("inf"), float("inf"), depth, board)
+    else:
+        return alpha_beta_min(-float("inf"), float("inf"), depth, board)
+
+
+def alpha_beta_max(alpha, beta, depth, board):
     debug_info["nodes_searched"] += 1
 
     if depth == 0:
         return evaluate_board(board)
 
-    best_move = -float("inf") if is_maximising_player else float("inf")
     moves = get_ordered_moves(board)
 
-    if is_maximising_player:
-        for move in moves:
-            board.makeMove(move)
-            curr_move = minimax(depth - 1, board, not is_maximising_player)
-            if curr_move > best_move:
-                best_move = curr_move
-                debug_info["move_details"][depth] = move
-            board.undoMove()
-    else:
-        for move in moves:
-            board.makeMove(move)
-            curr_move = minimax(depth - 1, board, not is_maximising_player)
-            if curr_move < best_move:
-                best_move = curr_move
-                debug_info["move_details"][depth] = move
-            board.undoMove()
-    return best_move
+    for move in moves:
+        board.makeMove(move)
+        current_value = alpha_beta_min(alpha, beta, depth - 1, board)
+        board.undoMove()
+
+        if current_value >= beta:
+            return beta
+        if current_value > alpha:
+            alpha = current_value
+            debug_info["move_details"][depth] = move
+    return alpha
+
+
+def alpha_beta_min(alpha, beta, depth, board):
+    debug_info["nodes_searched"] += 1
+
+    if depth == 0:
+        return evaluate_board(board)
+
+    moves = get_ordered_moves(board)
+
+    for move in moves:
+        board.makeMove(move)
+        current_value = alpha_beta_max(alpha, beta, depth - 1, board)
+        board.undoMove()
+
+        if current_value <= alpha:
+            return alpha
+        if current_value < beta:
+            beta = current_value
+            debug_info["move_details"][depth] = move
+    return beta
