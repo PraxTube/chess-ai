@@ -1,3 +1,5 @@
+import os
+
 import chess_ai.chess_engine as chess
 
 
@@ -33,7 +35,15 @@ def test_make_move():
 
 
 def test_undo_move():
-    pass
+    board = chess.GameState()
+    move = chess.Move((6, 4), (4, 4), board.board)
+    board.makeMove(move)
+
+    assert "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b - - 0 1" == board.fen()
+
+    board.undoMove()
+
+    assert "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1" == board.fen()
 
 
 def test_get_valid_moves():
@@ -41,6 +51,28 @@ def test_get_valid_moves():
     legal_moves = board.getValidMoves()
 
     assert 20 == len(legal_moves)
+
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    boards_and_moves_file = os.path.join(script_dir, "boards_and_moves.txt")
+
+    with open(boards_and_moves_file, "r") as f:
+        boards_and_moves = [
+            (
+                x.rstrip().split(";")[0],
+                [y for y in x.rstrip().split(";")[1].replace(" ", "").split(",")],
+            )
+            for x in f.readlines()
+        ]
+
+    for board, expected_moves in boards_and_moves:
+        board = chess.GameState(board)
+        actual_moves = [str(x) for x in board.getValidMoves()]
+
+        expected_moves.sort()
+        actual_moves.sort()
+
+        assert len(expected_moves) == len(actual_moves)
+        assert expected_moves == actual_moves
 
 
 def test_get_all_possible_moves():
