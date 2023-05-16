@@ -20,7 +20,7 @@ def main_loop_debug(depth):
     while True:
         best_move = next_move(depth, board)
         if not best_move:
-            print("\n\n\n-------\nGame Over\n\n----")
+            game_over(board)
             break
         inout.print_board(board, best_move)
 
@@ -38,3 +38,15 @@ def main_loop_no_debug(depth):
             break
 
         board.makeMove(best_move)
+
+
+def game_over(board):
+    if not board.checkmate:
+        raise ValueError("The board indicated that it's not checkmate!", board.fen())
+
+    if not board.getValidMoves():
+        raise ValueError("The board indicates that there are possible moves!", board.getValidMoves())
+
+    print(f"The winner is {not board.white_to_move}!")
+    print(f"The end baord is:\n")
+    print(board)

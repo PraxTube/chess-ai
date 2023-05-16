@@ -36,7 +36,7 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
     moves = get_ordered_moves(board)
 
     if len(moves) == 0:
-        raise Exception("Game is Over!")
+        return None
 
     best_move_found = moves[0]
 
