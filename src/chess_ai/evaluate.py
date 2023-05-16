@@ -15,3 +15,4 @@ def evaluate_board(board, move=None):
 
     multiplication_mask = np.array([1, 3, 3, 5, 9, 900])
     return white_pieces.dot(multiplication_mask) - black_pieces.dot(multiplication_mask)
+
