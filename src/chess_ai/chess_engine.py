@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class GameState:
     def __init__(self, fen_board=None):
         if not fen_board:
@@ -80,6 +83,28 @@ class GameState:
                     c = "p" if square == "P" else square.upper()
                     rank[i] = "w" + c
         return board
+
+    def to_np(self):
+        piece_values = {
+            "--": 0,  # Empty square
+            "wp": 1,  # White Pawn
+            "wN": 2,  # White Knight
+            "wB": 3,  # White Bishop
+            "wR": 4,  # White Rook
+            "wQ": 5,  # White Queen
+            "wK": 6,  # White King
+            "bp": -1,  # Black Pawn
+            "bN": -2,  # Black Knight
+            "bB": -3,  # Black Bishop
+            "bR": -4,  # Black Rook
+            "bQ": -5,  # Black Queen
+            "bK": -6,  # Black King
+        }
+
+        board_as_np = np.array(
+            [[piece_values[piece] for piece in row] for row in self.board]
+        )
+        return board_as_np
 
     def setup_default_board(self):
         self.board = [
