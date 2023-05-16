@@ -8,11 +8,16 @@ from chess_ai.evaluate import evaluate_board
 from chess_ai.log import debug_info
 
 
-def next_move(depth: int, board: chess.GameState, debug=True) -> chess.Move:
+def next_move(
+    depth: int, board: chess.GameState, debug=True, return_debug_info=False
+) -> chess.Move:
     if debug:
         debug_info["nodes_searched"] = 0
 
     move = minimax_root(depth, board)
+
+    if return_debug_info:
+        return move, debug_info
     return move
 
 

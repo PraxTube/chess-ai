@@ -1,26 +1,21 @@
-import chess_ai.chess_engine as chess
-from chess_ai.move import next_move
-from chess_ai import inout
-from chess_ai import log
+import argparse
+
+from chess_ai.play import main_loop
+
+parser = argparse.ArgumentParser(description="Chess AI that uses alpha-beta search.")
+parser.add_argument(
+    "-d",
+    "--depth",
+    action="store",
+    type=int,
+    default=3,
+    help="The depth for the alpha-beta tree search",
+)
+args = parser.parse_args()
 
 
 def main():
-    depth = 4
-    board = chess.GameState()
-
-    for i in range(1, depth):
-        log.debug_info["move_details"][i] = None
-
-    while True:
-        best_move = next_move(depth, board)
-        if not best_move:
-            print("\n\n\n-------\nGame Over\n\n----")
-            break
-        inout.print_board(board, best_move)
-
-        board.makeMove(best_move)
-        log.append_log_file(best_move)
-        log.append_extensive_log_file(board)
+    main_loop(args.depth)
 
 
 if __name__ == "__main__":
