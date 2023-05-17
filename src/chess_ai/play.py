@@ -6,9 +6,9 @@ from chess_ai import log
 
 def main_loop(depth, do_debug=True):
     if do_debug:
-        main_loop_debug
+        main_loop_debug(depth)
     else:
-        main_loop_no_debug
+        main_loop_no_debug(depth)
 
 
 def main_loop_debug(depth):
@@ -20,7 +20,7 @@ def main_loop_debug(depth):
     while True:
         best_move = next_move(depth, board)
         if not best_move:
-            print("\n\n\n-------\nGame Over\n\n----")
+            game_over(board)
             break
         inout.print_board(board, best_move)
 
@@ -38,3 +38,20 @@ def main_loop_no_debug(depth):
             break
 
         board.makeMove(best_move)
+
+
+def game_over(board):
+    if not board.checkmate:
+        raise ValueError("The board indicated that it's not checkmate!", board.fen())
+
+    moves = board.getValidMoves()
+    if moves:
+        raise ValueError(
+            "Checkmate! But board indicates that there are possible moves!", moves
+        )
+
+    winner = "White - Max" if not board.white_to_move else "Black - Min"
+    print(f"\n\nCHECKMATE!\n---\nThe winner is {winner}!")
+    print("The end baord is:\n")
+    print(board)
+    print(f"\nFEN:\n{board.fen()}")

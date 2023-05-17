@@ -1,4 +1,5 @@
 import time
+import random
 from typing import List
 
 from tqdm import tqdm
@@ -36,7 +37,7 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
     moves = get_ordered_moves(board)
 
     if len(moves) == 0:
-        raise Exception("Game is Over!")
+        return None
 
     best_move_found = moves[0]
 
@@ -44,6 +45,10 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
     allocated_time = 100
 
     for move in tqdm(moves, desc="Searching moves..."):
+        if not maximize:
+            index = random.randint(0, len(moves) - 1)
+            return moves[index]
+
         if time.time() - start_time >= allocated_time:
             return best_move_found
 
@@ -88,7 +93,7 @@ def alpha_beta_max(alpha, beta, depth, board):
             return beta
         if current_value > alpha:
             alpha = current_value
-            debug_info["move_details"][depth] = move
+            debug_info["move_details"][depth] = move.coordinate()
     return alpha
 
 
@@ -109,5 +114,5 @@ def alpha_beta_min(alpha, beta, depth, board):
             return alpha
         if current_value < beta:
             beta = current_value
-            debug_info["move_details"][depth] = move
+            debug_info["move_details"][depth] = move.coordinate()
     return beta

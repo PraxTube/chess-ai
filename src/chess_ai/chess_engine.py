@@ -896,7 +896,25 @@ class Move:
     def getRankFile(self, row, col):
         return self.cols_to_files[col] + self.rows_to_ranks[row]
 
+    def coordinate(self):
+        """
+        Returns coordinate notation
+        """
+        if self.is_castle_move:
+            return "0-0" if self.end_col == 6 else "0-0-0"
+
+        start_square = self.getRankFile(self.start_row, self.start_col)
+        end_square = self.getRankFile(self.end_row, self.end_col)
+
+        if self.is_pawn_promotion:
+            return start_square + end_square + "q"
+
+        return start_square + end_square
+
     def __str__(self):
+        """
+        Returns algebraic notation
+        """
         if self.is_castle_move:
             return "0-0" if self.end_col == 6 else "0-0-0"
 
