@@ -86,8 +86,8 @@ Note that your branch will **only** be tested if you have an open **pull request
 
 The deadline for this is the **18th Mai**.
 
-- [ ] Alpha-beta search
+- [x] Alpha-beta search
 - [ ] Sophisticated evaluation function
-- [ ] Unit tests for legal moves
+- [x] Unit tests for legal moves
 - [ ] Unit tests for chess engine
 - [ ] Benchmarks that test different depths
