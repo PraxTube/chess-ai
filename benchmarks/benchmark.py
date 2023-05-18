@@ -12,19 +12,29 @@ from chess_ai import evaluate
 script_dir = os.path.dirname(os.path.abspath(__file__))
 benchmark_file = os.path.join(script_dir, "boards_and_moves.txt")
 benchmark_dataframe = pd.DataFrame(
-    columns=["Game Stage", "Type", "Total", "Average", "Valid Moves", "Fen"]
+    columns=["Category", "Total", "Average", "Valid Moves", "Fen"]
 )
-stage = ["Early", "Mid", "Late"]
+msgs = [
+    "Fen Conversion",
+    "Legal Move Gen",
+    "Making Move",
+    "Evaluate Board WITHOUT Move",
+    "Evaluate Board",
+    "Best Move Gen",
+]
 
 
-def benchmark_to_dataframe(
-    stage_index, msg, total_time, average_time, valid_moves, fen
-):
+def benchmark_to_dataframe(msg_index, total_time, average_time, valid_moves, fen):
+    if msg_index == 3:
+        return
+
+    if not 0 <= msg_index < len(msgs):
+        raise ValueError("The given index is outside of it's bounds!", msgs, msg_index)
+
     row_data = {
-        "Game Stage": stage[stage_index],
-        "Type": msg,
-        "Total": total_time,
-        "Average": average_time,
+        "Category": msgs[msg_index],
+        "Total": round(total_time, 1),
+        "Average": round(average_time, 2),
         "Valid Moves": valid_moves,
         "Fen": fen,
     }
@@ -81,11 +91,11 @@ def bench_evaluate(board, move=None):
             evaluate.evaluate_board(board, move)
 
 
-def benchmark_template(msg, n, result_func, boards, use_seconds, stage_index):
-    print(f"\n==========\n{msg}\n==========\n")
-    csv_msg = msg
+def benchmark_template(msg_index, n, result_func, boards, use_seconds):
+    print(f"\n==========\n{msgs[msg_index]}\n==========\n")
     for board in boards:
         result = result_func.__call__(board)
+        number_of_valid_moves = len(board.getValidMoves())
 
         if use_seconds:
             msg = "Total: {}s, Average: {}ms - {} - {}"
@@ -100,21 +110,20 @@ def benchmark_template(msg, n, result_func, boards, use_seconds, stage_index):
             msg.format(
                 total_time,
                 average_time,
-                len(board.getValidMoves()),
+                number_of_valid_moves,
                 board.fen(),
             )
         )
         benchmark_to_dataframe(
-            stage_index,
-            csv_msg,
+            msg_index,
             total_time,
             average_time,
-            len(board.getValidMoves()),
+            number_of_valid_moves,
             board.fen(),
         )
 
 
-def benchmark_to_fen(boards, stage_index):
+def benchmark_to_fen(boards):
     n = 10000
 
     def bench(board):
@@ -124,13 +133,11 @@ def benchmark_to_fen(boards, stage_index):
             globals=locals(),
         )
 
-    benchmark_template(
-        "Benchmark to fen string conversion", n, bench, boards, False, stage_index
-    )
+    benchmark_template(0, n, bench, boards, False)
 
 
-def benchmark_legal_moves(boards, stage_index):
-    n = 10000
+def benchmark_legal_moves(boards):
+    n = 1000
 
     def bench(board):
         return timeit.timeit(
@@ -139,12 +146,10 @@ def benchmark_legal_moves(boards, stage_index):
             globals=locals(),
         )
 
-    benchmark_template(
-        "Benchmark legal moves generation", n, bench, boards, False, stage_index
-    )
+    benchmark_template(1, n, bench, boards, False)
 
 
-def benchmark_move(boards, stage_index):
+def benchmark_move(boards):
     n = 10000
 
     def bench(board):
@@ -155,10 +160,10 @@ def benchmark_move(boards, stage_index):
             globals=locals(),
         )
 
-    benchmark_template("Benchmark making moves", n, bench, boards, False, stage_index)
+    benchmark_template(2, n, bench, boards, False)
 
 
-def benchmark_evaluate(boards, stage_index):
+def benchmark_evaluate(boards):
     n = 1000
 
     def bench_without_move(board):
@@ -177,24 +182,22 @@ def benchmark_evaluate(boards, stage_index):
         )
 
     benchmark_template(
-        "Benchmark evaluate board WITHOUT move",
+        3,
         n,
         bench_without_move,
         boards,
         False,
-        stage_index,
     )
     benchmark_template(
-        "Benchmark evaluate board WITH move",
+        4,
         n,
         bench_with_move,
         boards,
         False,
-        stage_index,
     )
 
 
-def benchmark_best_move(boards, stage_index):
+def benchmark_best_move(boards):
     n = 100
 
     def bench(board):
@@ -204,9 +207,7 @@ def benchmark_best_move(boards, stage_index):
             globals=locals(),
         )
 
-    benchmark_template(
-        "Benchmark best move generation", n, bench, boards, True, stage_index
-    )
+    benchmark_template(5, n, bench, boards, True)
 
 
 def benchmark():
@@ -221,11 +222,11 @@ def benchmark():
     for i in range(len(boards_list)):
         print(prints_list[i])
 
-        benchmark_to_fen(boards_list[i], i)
-        benchmark_legal_moves(boards_list[i], i)
-        benchmark_move(boards_list[i], i)
-        benchmark_evaluate(boards_list[i], i)
-        benchmark_best_move(boards_list[i], i)
+        benchmark_to_fen(boards_list[i])
+        benchmark_legal_moves(boards_list[i])
+        benchmark_move(boards_list[i])
+        benchmark_evaluate(boards_list[i])
+        benchmark_best_move(boards_list[i])
 
     benchmark_dataframe.to_csv("benchmarks/benchmarks.csv")
     benchmark_dataframe.to_latex("benchmarks/benchmarks.tex", index=False)
