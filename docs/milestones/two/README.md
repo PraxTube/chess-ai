@@ -40,7 +40,7 @@ The boards that were used
   `4k3/8/8/3PP3/3pp3/8/8/3K4 w - - 0 1`.
 
 <p align="center">
-  <img src="benchmark-table.svg" alt="Table SVG Image">
+  <img src="benchmark-tables.svg" alt="Tables SVG Image">
 </p>
 
 The tests were run on a PC with the following specs
@@ -49,30 +49,7 @@ The tests were run on a PC with the following specs
 
 - RAM: 24GB DDR3
 
-Interesting to note is that the evaluation function
-should be the same for both. The only reason they could be
-different, is that the fen string of the python-chess is
-very slow.
-
-Also interesting to note is the fact that the current
-engine, which is mainly written by people who did this
-for the first time, is somehow faster then the python-chess
-engine, which is written by many people and maintained since
-a long time. It could be that python-chess is rather bloated
-and as a result very slow. However I would doubt that bloat
-would cause such a significance in performance.
-
-The bottlenecks of the current engine seem to be the legal
-move generation. That seems to be very fast in the python-chess
-engine. If we can somehow get the speed from the python-chess
-engine while maintaining the speed in the other categories
-then we could potentially increase the performance by a huge
-amount. However given that python-chess uses `0x88` as a backend
-and the current engine uses arrays, this will most likely not be
-possible.
-
-The chess engine also doesn't yet implement
-king of the hill win conditions.
+CONTENT
 
 ## Basic AI
 
@@ -124,22 +101,10 @@ maintainability as well as performance of the AI.
 
 ## Final remarks
 
-Many things went rather roughly, such as
+Given that the time frame was much shorter compared to the
+first milestone there is much less to say. We did improve our
+team work though, mainly because we have much more clear
+tasks now (in the form of issues) which are easier to
+complete.
 
-- Team coordination (mainly due to the fact that only really
-  one person can work on the engine)
-- Writing the chess engine and debugging it
-- Writing unit tests this early wasn't very useful
-- Getting started was the hardest part, as we didn't quite
-  know what to do (where to begin)
-
-However there were also things that proofed to be very useful
-
-- Benchmarking is extremely valuable
-- Writing debugging tools early can pay of (same with logging tools)
-- Failing fast (using python-chess to code up a simple AI) created
-  a good base knowledge about what needs to be done
-- Writing good git commits is extremely useful for both
-  documentation (like this one) and overall work flow
-
-An overall very teaching experience.
+Overall the development seems to be heading in a good direction.
