@@ -162,3 +162,5 @@ cython_debug/
 # Project related
 
 logs/
+benchmarks.csv
+benchmarks.tex
