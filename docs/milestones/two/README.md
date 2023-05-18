@@ -49,7 +49,31 @@ The tests were run on a PC with the following specs
 
 - RAM: 24GB DDR3
 
-CONTENT
+The new AI is significantly slower, however that is mostly due
+to the new evaluation function. It runs multiple matrix
+multiplications which are much more costly then simply
+calculating the board material. Another interesting
+comparision is seen in the following table
+
+<p align="center">
+  <img src="benchmark-depths-table.svg" alt="Depth Table SVG Image">
+</p>
+
+Note that the evaluation function is the same for both
+(the one from the Dummy AI). Here we can see that alpha-beta is
+faster for most cases, but not for all. Once we reach
+a very high depth, alpha-beta is much slower.
+It's very unclear why that is the case, I guess it
+has to do with the fact that we have more overhead
+with alpha-beta (though that should be neglectiable).
+
+We are going to have to look closer at this and experiment
+more. The cut-offs with better evaluation functions
+are going to be interesting.
+
+The visualization with plots seems much more appropriate
+in this case. We hope that we will have an automaized way
+to plot the data by the next milestone.
 
 ## Basic AI
 
@@ -78,10 +102,21 @@ plan too much ahead. This comes to bite us in the ass now,
 as refactoring the engine to use numpy instead of lists
 will require a massive amount of time and effort.
 
+## Issues and Bugs
+
+There seem to be an endless amount of issues piling up
+in the repo. Mostly improvements and features but also
+some bugs in either the engine or the AI. I hope that we
+can get rid of some if not all of them in the next milestone.
+
 ## Future Improvements
 
-For the next milestone we would like to focus
-heavily on the chess engine.
+For the next milestone we would like to focus heavily on
+refactoring, both the engine as well as the AI
+(alpha-beta and evaluation). This will take an imense
+amount of time and effort however, so we will see how
+much we can achieve.
+
 If we don't clean up our foundation,
 which is our engine, we will only run into more and
 more bugs. On that note, the following points are a
@@ -107,4 +142,5 @@ team work though, mainly because we have much more clear
 tasks now (in the form of issues) which are easier to
 complete.
 
-Overall the development seems to be heading in a good direction.
+Overall the development could go better (as it always could),
+but I am optimistic.
