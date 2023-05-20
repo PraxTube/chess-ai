@@ -3,6 +3,7 @@ from datetime import datetime
 
 
 main_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+os.makedirs(os.path.join(main_dir, "logs"), exist_ok=True)
 
 debug_info = {"nodes_searched": 0, "move_details": {}}
 
