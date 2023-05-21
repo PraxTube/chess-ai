@@ -5,8 +5,22 @@ import chess_ai.chess_engine as chess
 
 def test_fen():
     board = chess.Board()
-    assert "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1" == board.fen()
+    assert "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" == board.fen()
 
+    board = chess.Board(
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b KQkq - 0 1"
+    )
+    assert (
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b KQkq - 0 1"
+        == board.fen()
+    )
+    board = chess.Board(
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b KQ - 0 1"
+    )
+    assert (
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b KQ - 0 1"
+        == board.fen()
+    )
     board = chess.Board(
         "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b - - 0 1"
     )
@@ -18,10 +32,24 @@ def test_fen():
 
 def test_setup_fen_board():
     board = chess.Board(
-        "R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1 w - - 0 1"
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b Kkq - 0 1"
     )
     assert (
-        "R2Q1RK1/P2B1PPP/1PNP1N2/2P1P3/2pp4/2pbp2p/p2n1pp1/1rbq1rk1 w - - 0 1"
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b Kkq - 0 1"
+        == board.fen()
+    )
+    board = chess.Board(
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R w Q - 0 1"
+    )
+    assert (
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R w Q - 0 1"
+        == board.fen()
+    )
+    board = chess.Board(
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b - - 0 1"
+    )
+    assert (
+        "r3k2r/ppp1bppp/b1n2n2/1N2B3/2B1q3/2Q1PN2/PPP2PPP/R3K2R b - - 0 1"
         == board.fen()
     )
 
@@ -31,7 +59,7 @@ def test_make_move():
     move = chess.Move((6, 4), (4, 4), board.board)
     board.make_move(move)
 
-    assert "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b - - 0 1" == board.fen()
+    assert "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1" == board.fen()
 
 
 def test_undo_move():
@@ -39,11 +67,11 @@ def test_undo_move():
     move = chess.Move((6, 4), (4, 4), board.board)
     board.make_move(move)
 
-    assert "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b - - 0 1" == board.fen()
+    assert "rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1" == board.fen()
 
     board.undo_move()
 
-    assert "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1" == board.fen()
+    assert "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1" == board.fen()
 
 
 def test_legal_moves():
@@ -135,7 +163,13 @@ def test_legal_moves():
 
     board.make_move(promotion_move)
     assert (
-        "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQ1RK1 b - - 0 1"
+        "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQ1RK1 b kq - 0 1"
+        == board.fen()
+    )
+
+    board.undo_move()
+    assert (
+        "r1bqk2r/pppp1ppp/2n2n2/4p3/1bB1P3/2N2N2/PPPP1PPP/R1BQK2R w KQkq - 0 1"
         == board.fen()
     )
 

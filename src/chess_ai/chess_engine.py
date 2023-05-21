@@ -49,7 +49,11 @@ class Board:
         # Add the active color
         fen += " {} ".format("w" if self.white_to_move else "b")
         # Add the castling availability
-        fen += "- "
+        if self.current_castling_rights.any():
+            sides = np.array(["K", "Q", "k", "q"])
+            fen += "".join(sides[self.current_castling_rights]) + " "
+        else:
+            fen += "- "
         # Add the en passant target square
         fen += "- "
         # Add the half-move and full-move counters
@@ -136,15 +140,8 @@ class Board:
         self.checks = []
         self.enpassant_possible = ()
         self.enpassant_possible_log = [self.enpassant_possible]
-        self.current_castling_rights = CastleRights(True, True, True, True)
-        self.castle_rights_log = [
-            CastleRights(
-                self.current_castling_rights.wks,
-                self.current_castling_rights.bks,
-                self.current_castling_rights.wqs,
-                self.current_castling_rights.bqs,
-            )
-        ]
+        self.current_castling_rights = np.array([True, True, True, True])
+        self.castle_rights_log = [self.current_castling_rights.copy()]
 
     def setup_fen_board(self, fen_board):
         self.board = self.fen_to_board(fen_board)
@@ -163,25 +160,20 @@ class Board:
         self.stalemate = False
         self.in_check = False
         fen_castle_rights = fen_board.split()[2]
-        self.current_castling_rights = CastleRights(
-            "K" in fen_castle_rights,
-            "k" in fen_castle_rights,
-            "Q" in fen_castle_rights,
-            "q" in fen_castle_rights,
-        )
         self.pins = []
         self.checks = []
-        self.enpassant_possible = ()
         self.move_log = []
+        self.enpassant_possible = ()
         self.enpassant_possible_log = [self.enpassant_possible]
-        self.castle_rights_log = [
-            CastleRights(
-                self.current_castling_rights.wks,
-                self.current_castling_rights.bks,
-                self.current_castling_rights.wqs,
-                self.current_castling_rights.bqs,
-            )
-        ]
+        self.current_castling_rights = np.array(
+            [
+                "K" in fen_castle_rights,
+                "Q" in fen_castle_rights,
+                "k" in fen_castle_rights,
+                "q" in fen_castle_rights,
+            ]
+        )
+        self.castle_rights_log = [self.current_castling_rights.copy()]
 
     def find_piece(self, piece):
         for row in range(len(self.board)):
@@ -235,14 +227,7 @@ class Board:
 
         # update castling rights - whenever it is a rook or king move
         self.update_castle_rights(move)
-        self.castle_rights_log.append(
-            CastleRights(
-                self.current_castling_rights.wks,
-                self.current_castling_rights.bks,
-                self.current_castling_rights.wqs,
-                self.current_castling_rights.bqs,
-            )
-        )
+        self.castle_rights_log.append(self.current_castling_rights.copy())
 
     def undo_move(self):
         if len(self.move_log) != 0:  # make sure that there is a move to undo
@@ -267,9 +252,7 @@ class Board:
 
             # undo castle rights
             self.castle_rights_log.pop()
-            self.current_castling_rights = self.castle_rights_log[
-                -1
-            ]  # set the current castle rights to the last one in the list
+            self.current_castling_rights = self.castle_rights_log[-1]
             # undo the castle move
             if move.is_castle_move:
                 if move.end_col - move.start_col == 2:  # king-side
@@ -288,42 +271,36 @@ class Board:
     def update_castle_rights(self, move):
         if move.piece_captured == "wR":
             if move.end_col == 0:  # left rook
-                self.current_castling_rights.wqs = False
+                self.current_castling_rights[1] = False
             elif move.end_col == 7:  # right rook
-                self.current_castling_rights.wks = False
+                self.current_castling_rights[0] = False
         elif move.piece_captured == "bR":
             if move.end_col == 0:  # left rook
-                self.current_castling_rights.bqs = False
+                self.current_castling_rights[3] = False
             elif move.end_col == 7:  # right rook
-                self.current_castling_rights.bks = False
+                self.current_castling_rights[2] = False
 
         if move.piece_moved == "wK":
-            self.current_castling_rights.wqs = False
-            self.current_castling_rights.wks = False
+            self.current_castling_rights[1] = False
+            self.current_castling_rights[0] = False
         elif move.piece_moved == "bK":
-            self.current_castling_rights.bqs = False
-            self.current_castling_rights.bks = False
+            self.current_castling_rights[3] = False
+            self.current_castling_rights[2] = False
         elif move.piece_moved == "wR":
             if move.start_row == 7:
                 if move.start_col == 0:  # left rook
-                    self.current_castling_rights.wqs = False
+                    self.current_castling_rights[1] = False
                 elif move.start_col == 7:  # right rook
-                    self.current_castling_rights.wks = False
+                    self.current_castling_rights[0] = False
         elif move.piece_moved == "bR":
             if move.start_row == 0:
                 if move.start_col == 0:  # left rook
-                    self.current_castling_rights.bqs = False
+                    self.current_castling_rights[3] = False
                 elif move.start_col == 7:  # right rook
-                    self.current_castling_rights.bks = False
+                    self.current_castling_rights[2] = False
 
     def legal_moves(self):
-        temp_castle_rights = CastleRights(
-            self.current_castling_rights.wks,
-            self.current_castling_rights.bks,
-            self.current_castling_rights.wqs,
-            self.current_castling_rights.bqs,
-        )
-        # advanced algorithm
+        temp_castle_rights = self.current_castling_rights.copy()
         moves = []
         self.in_check, self.pins, self.checks = self.pins_and_checks()
 
@@ -733,28 +710,22 @@ class Board:
             for i in range(1, 8):
                 end_row = row + direction[0] * i
                 end_col = col + direction[1] * i
-                if (
-                    0 <= end_row <= 7 and 0 <= end_col <= 7
-                ):  # check if the move is on board
-                    if (
-                        not piece_pinned
-                        or pin_direction == direction
-                        or pin_direction == (-direction[0], -direction[1])
-                    ):
-                        end_piece = self.board[end_row][end_col]
-                        if end_piece == "--":  # empty space is valid
-                            moves.append(
-                                Move((row, col), (end_row, end_col), self.board)
-                            )
-                        elif end_piece[0] == enemy_color:  # capture enemy piece
-                            moves.append(
-                                Move((row, col), (end_row, end_col), self.board)
-                            )
-                            break
-                        else:  # friendly piece
-                            break
-                else:  # off board
+                if not (0 <= end_row <= 7 and 0 <= end_col <= 7):
                     break
+
+                if (
+                    not piece_pinned
+                    or pin_direction == direction
+                    or pin_direction == (-direction[0], -direction[1])
+                ):
+                    end_piece = self.board[end_row][end_col]
+                    if end_piece == "--":  # empty space is valid
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                    elif end_piece[0] == enemy_color:  # capture enemy piece
+                        moves.append(Move((row, col), (end_row, end_col), self.board))
+                        break
+                    else:  # friendly piece
+                        break
 
     def queen_moves(self, row, col, moves):
         self.bishop_moves(row, col, moves)
@@ -785,23 +756,15 @@ class Board:
                         self.black_king_location = (row, col)
 
     def castle_moves(self, row, col, moves):
-        if (
-            not self.current_castling_rights.wks
-            and not self.current_castling_rights.bks
-            and not self.current_castling_rights.wqs
-            and not self.current_castling_rights.bqs
-        ):
-            pass
-
         if self.square_under_attack(row, col):
             return  # can't castle while in check
 
-        if (self.white_to_move and self.current_castling_rights.wks) or (
-            not self.white_to_move and self.current_castling_rights.bks
+        if (self.white_to_move and self.current_castling_rights[0]) or (
+            not self.white_to_move and self.current_castling_rights[2]
         ):
             self.kingside_castle_moves(row, col, moves)
-        if (self.white_to_move and self.current_castling_rights.wqs) or (
-            not self.white_to_move and self.current_castling_rights.bqs
+        if (self.white_to_move and self.current_castling_rights[1]) or (
+            not self.white_to_move and self.current_castling_rights[3]
         ):
             self.queenside_castle_moves(row, col, moves)
 
@@ -826,14 +789,6 @@ class Board:
                 moves.append(
                     Move((row, col), (row, col - 2), self.board, is_castle_move=True)
                 )
-
-
-class CastleRights:
-    def __init__(self, wks, bks, wqs, bqs):
-        self.wks = wks
-        self.bks = bks
-        self.wqs = wqs
-        self.bqs = bqs
 
 
 class Move:
