@@ -2,6 +2,7 @@ import os
 from io import StringIO
 import timeit
 import contextlib
+
 import pandas as pd
 
 from chess_ai import chess_engine as chess
@@ -14,6 +15,8 @@ benchmark_file = os.path.join(script_dir, "boards_and_moves.txt")
 benchmark_dataframe = pd.DataFrame(
     columns=["Category", "Total", "Average", "Valid Moves", "Fen"]
 )
+stage = ["Early", "Mid", "Late"]
+
 msgs = [
     "Fen Conversion",
     "Legal Move Gen",
@@ -33,7 +36,7 @@ def benchmark_to_dataframe(msg_index, total_time, average_time, valid_moves, fen
 
     row_data = {
         "Category": msgs[msg_index],
-        "Total": round(total_time, 1),
+        "Total": round(total_time, 2),
         "Average": round(average_time, 2),
         "Valid Moves": valid_moves,
         "Fen": fen,
@@ -91,20 +94,30 @@ def bench_evaluate(board, move=None):
             evaluate.evaluate_board(board, move)
 
 
+def seconds_format(result, n):
+    msg = "Total: {}s, Average: {}ms - {} - {}"
+    total_time = round(result, 4)
+    average_time = round(result / n * 1000, 2)
+    return msg, total_time, average_time
+
+
+def milliseconds_format(result, n):
+    msg = "Total: {}ms, Average: {}µs - {} - {}"
+    total_time = round(result * 1000, 4)
+    average_time = round(result / n * 1000 * 1000, 2)
+    return msg, total_time, average_time
+
+
 def benchmark_template(msg_index, n, result_func, boards, use_seconds):
     print(f"\n==========\n{msgs[msg_index]}\n==========\n")
-    for board in boards:
+    for i, board in enumerate(boards):
         result = result_func.__call__(board)
         number_of_valid_moves = len(board.getValidMoves())
 
         if use_seconds:
-            msg = "Total: {}s, Average: {}ms - {} - {}"
-            total_time = round(result, 4)
-            average_time = round(result / n * 1000, 2)
+            msg, total_time, average_time = seconds_format(result, n)
         else:
-            msg = "Total: {}ms, Average: {}µs - {} - {}"
-            total_time = round(result * 1000, 4)
-            average_time = round(result / n * 1000 * 1000, 2)
+            msg, total_time, average_time = milliseconds_format(result, n)
 
         print(
             msg.format(
@@ -114,13 +127,15 @@ def benchmark_template(msg_index, n, result_func, boards, use_seconds):
                 board.fen(),
             )
         )
-        benchmark_to_dataframe(
-            msg_index,
-            total_time,
-            average_time,
-            number_of_valid_moves,
-            board.fen(),
-        )
+
+        if i == 0:
+            benchmark_to_dataframe(
+                msg_index,
+                total_time,
+                average_time,
+                number_of_valid_moves,
+                board.fen(),
+            )
 
 
 def benchmark_to_fen(boards):
@@ -228,8 +243,7 @@ def benchmark():
         benchmark_evaluate(boards_list[i])
         benchmark_best_move(boards_list[i])
 
-    benchmark_dataframe.to_csv("benchmarks/benchmarks.csv")
-    benchmark_dataframe.to_latex("benchmarks/benchmarks.tex", index=False)
+    benchmark_dataframe.to_csv("benchmarks/benchmarks.csv", index=False)
 
 
 if __name__ == "__main__":
