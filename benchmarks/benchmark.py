@@ -51,7 +51,7 @@ def suppress_prints():
 def get_boards(file):
     with open(os.path.join(script_dir, file), "r") as f:
         content = f.readlines()
-        boards = [chess.GameState(x) for x in content]
+        boards = [chess.Board(x) for x in content]
         return boards
 
 
@@ -72,14 +72,14 @@ def bench_to_fen(board):
 def bench_legal_moves(board):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
-            board.getValidMoves()
+            board.legal_moves()
 
 
 def bench_move(board, move):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
-            board.makeMove(move)
-            board.undoMove()
+            board.make_move(move)
+            board.undo_move()
 
 
 def bench_best_move(depth, board):
@@ -112,7 +112,7 @@ def benchmark_template(msg_index, n, result_func, boards, use_seconds):
     print(f"\n==========\n{msgs[msg_index]}\n==========\n")
     for i, board in enumerate(boards):
         result = result_func.__call__(board)
-        number_of_valid_moves = len(board.getValidMoves())
+        number_of_valid_moves = len(board.legal_moves())
 
         if use_seconds:
             msg, total_time, average_time = seconds_format(result, n)
@@ -168,7 +168,7 @@ def benchmark_move(boards):
     n = 10000
 
     def bench(board):
-        move = board.getValidMoves()[0]
+        move = board.legal_moves()[0]
         return timeit.timeit(
             lambda: bench_move(board, move),
             number=n,
@@ -189,7 +189,7 @@ def benchmark_evaluate(boards):
         )
 
     def bench_with_move(board):
-        move = board.getValidMoves()[0]
+        move = board.legal_moves()[0]
         return timeit.timeit(
             lambda: bench_evaluate(board, move),
             number=n,

@@ -163,11 +163,11 @@ def evaluate_board(board, move=None):
     eval_sum = material_value(board, move)
 
     if move:
-        board.makeMove(move)
-        np_board = board.to_np()
-        board.undoMove()
+        board.make_move(move)
+        B = board.to_np()
+        board.undo_move()
     else:
-        np_board = board.to_np()
+        B = board.to_np()
 
     piece_values = [1, 2, 3, 4, 5, 6]
     tables = [
@@ -180,8 +180,8 @@ def evaluate_board(board, move=None):
     ]
 
     for i, table in enumerate(tables):
-        eval_sum += np.sum(np.dot(table, np_board == piece_values[i]))
-        eval_sum -= np.sum(np.dot(np.flipud(table), np_board == -piece_values[i]))
+        eval_sum += np.sum(np.dot(table, B == piece_values[i]))
+        eval_sum -= np.sum(np.dot(np.flipud(table), B == -piece_values[i]))
 
     return eval_sum
 
@@ -190,9 +190,9 @@ def material_value(board, move=None):
     start_fen = board.fen()
 
     if move:
-        board.makeMove(move)
+        board.make_move(move)
         fen_string = board.fen().split()[0]
-        board.undoMove()
+        board.undo_move()
     else:
         fen_string = board.fen().split()[0]
 

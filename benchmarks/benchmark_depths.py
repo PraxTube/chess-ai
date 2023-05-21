@@ -41,7 +41,7 @@ def benchmark_template(msg, n, result_func, depth, board):
         msg.format(
             total_time,
             average_time,
-            len(board.getValidMoves()),
+            len(board.legal_moves()),
             board.fen(),
         )
     )
@@ -78,7 +78,7 @@ def benchmark():
     for i in range(max_depth):
         info = benchmark_best_move(
             i + 1,
-            [chess.GameState(board) for board in boards],
+            [chess.Board(board) for board in boards],
             number_of_runs[i],
             msg.replace("#", str(i + 1)).replace("$", str(number_of_runs[i])),
         )

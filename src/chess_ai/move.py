@@ -10,7 +10,7 @@ from chess_ai.log import debug_info
 
 
 def next_move(
-    depth: int, board: chess.GameState, debug=True, return_debug_info=False
+    depth: int, board: chess.Board, debug=True, return_debug_info=False
 ) -> chess.Move:
     if debug:
         debug_info["nodes_searched"] = 0
@@ -22,15 +22,15 @@ def next_move(
     return move
 
 
-def get_ordered_moves(board: chess.GameState) -> List[chess.Move]:
+def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
     def orderer(move):
         return evaluate_board(board, move)
 
-    in_order = sorted(board.getValidMoves(), key=orderer, reverse=(board.white_to_move))
+    in_order = sorted(board.legal_moves(), key=orderer, reverse=(board.white_to_move))
     return list(in_order)
 
 
-def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
+def minimax_root(depth: int, board: chess.Board) -> chess.Move:
     maximize = board.white_to_move
     best_move = -float("inf") if maximize else float("inf")
 
@@ -52,9 +52,9 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
         if time.time() - start_time >= allocated_time:
             return best_move_found
 
-        board.makeMove(move)
+        board.make_move(move)
         value = alpha_beta(depth - 1, board, not maximize)
-        board.undoMove()
+        board.undo_move()
 
         if maximize and value >= best_move:
             best_move = value
@@ -67,7 +67,7 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
 
 def alpha_beta(
     depth: int,
-    board: chess.GameState,
+    board: chess.Board,
     is_maximising_player: bool,
 ) -> float:
     if is_maximising_player:
@@ -85,9 +85,9 @@ def alpha_beta_max(alpha, beta, depth, board):
     moves = get_ordered_moves(board)
 
     for move in moves:
-        board.makeMove(move)
+        board.make_move(move)
         current_value = alpha_beta_min(alpha, beta, depth - 1, board)
-        board.undoMove()
+        board.undo_move()
 
         if current_value >= beta:
             return beta
@@ -106,9 +106,9 @@ def alpha_beta_min(alpha, beta, depth, board):
     moves = get_ordered_moves(board)
 
     for move in moves:
-        board.makeMove(move)
+        board.make_move(move)
         current_value = alpha_beta_max(alpha, beta, depth - 1, board)
-        board.undoMove()
+        board.undo_move()
 
         if current_value <= alpha:
             return alpha
