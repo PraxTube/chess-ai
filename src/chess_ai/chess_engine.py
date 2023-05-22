@@ -225,7 +225,6 @@ class Board:
 
         self.enpassant_possible_log.append(self.enpassant_possible)
 
-        # update castling rights - whenever it is a rook or king move
         self.update_castle_rights(move)
         self.castle_rights_log.append(self.current_castling_rights.copy())
 
@@ -252,7 +251,7 @@ class Board:
 
             # undo castle rights
             self.castle_rights_log.pop()
-            self.current_castling_rights = self.castle_rights_log[-1]
+            self.current_castling_rights = self.castle_rights_log[-1].copy()
             # undo the castle move
             if move.is_castle_move:
                 if move.end_col - move.start_col == 2:  # king-side

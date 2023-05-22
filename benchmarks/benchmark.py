@@ -214,10 +214,11 @@ def benchmark_evaluate(boards):
 
 def benchmark_best_move(boards):
     n = 100
+    depth = 1
 
     def bench(board):
         return timeit.timeit(
-            lambda: bench_best_move(1, board),
+            lambda: bench_best_move(depth, board),
             number=n,
             globals=locals(),
         )
