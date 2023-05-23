@@ -49,9 +49,9 @@ class Board:
         # Add the active color
         fen += " {} ".format("w" if self.white_to_move else "b")
         # Add the castling availability
-        if self.current_castling_rights.any():
+        if True in self.current_castling_rights:
             sides = np.array(["K", "Q", "k", "q"])
-            fen += "".join(sides[self.current_castling_rights]) + " "
+            fen += "".join(sides[np.array(self.current_castling_rights)]) + " "
         else:
             fen += "- "
         # Add the en passant target square
@@ -140,7 +140,7 @@ class Board:
         self.checks = []
         self.enpassant_possible = ()
         self.enpassant_possible_log = [self.enpassant_possible]
-        self.current_castling_rights = np.array([True, True, True, True])
+        self.current_castling_rights = [True, True, True, True]
         self.castle_rights_log = [self.current_castling_rights.copy()]
 
     def setup_fen_board(self, fen_board):
@@ -165,14 +165,12 @@ class Board:
         self.move_log = []
         self.enpassant_possible = ()
         self.enpassant_possible_log = [self.enpassant_possible]
-        self.current_castling_rights = np.array(
-            [
-                "K" in fen_castle_rights,
-                "Q" in fen_castle_rights,
-                "k" in fen_castle_rights,
-                "q" in fen_castle_rights,
-            ]
-        )
+        self.current_castling_rights = [
+            "K" in fen_castle_rights,
+            "Q" in fen_castle_rights,
+            "k" in fen_castle_rights,
+            "q" in fen_castle_rights,
+        ]
         self.castle_rights_log = [self.current_castling_rights.copy()]
 
     def find_piece(self, piece):
@@ -247,6 +245,7 @@ class Board:
                 self.board[move.start_row][move.end_col] = move.piece_captured
 
             self.enpassant_possible_log.pop()
+            # TODO Use .copy() here if the enpassant gets restructured into a list
             self.enpassant_possible = self.enpassant_possible_log[-1]
 
             # undo castle rights
