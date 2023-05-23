@@ -8,6 +8,7 @@ import pandas as pd
 from chess_ai import chess_engine as chess
 from chess_ai import move
 from chess_ai import evaluate
+from chess_ai.log import DebugInfo
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -82,16 +83,16 @@ def bench_move(board, move):
             board.undo_move()
 
 
-def bench_best_move(depth, board):
-    with contextlib.redirect_stdout(suppress_prints()):
-        with contextlib.redirect_stderr(suppress_prints()):
-            move.next_move(depth, board)
-
-
 def bench_evaluate(board, move=None):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
             evaluate.evaluate_board(board, move)
+
+
+def bench_best_move(depth, board, debug_info):
+    with contextlib.redirect_stdout(suppress_prints()):
+        with contextlib.redirect_stderr(suppress_prints()):
+            move.next_move(depth, board, debug_info)
 
 
 def seconds_format(result, n):
@@ -217,8 +218,9 @@ def benchmark_best_move(boards):
     depth = 1
 
     def bench(board):
+        debug_info = DebugInfo(1)
         return timeit.timeit(
-            lambda: bench_best_move(depth, board),
+            lambda: bench_best_move(depth, board, debug_info),
             number=n,
             globals=locals(),
         )

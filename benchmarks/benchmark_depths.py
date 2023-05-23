@@ -5,6 +5,7 @@ import contextlib
 
 import chess_ai.chess_engine as chess
 from chess_ai import move
+from chess_ai.log import DebugInfo
 
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -23,7 +24,8 @@ def bench_best_move(depth, board):
             global current_best_move
             global current_debug_info
 
-            best_move, debug_info = move.next_move(depth, board, return_debug_info=True)
+            debug_info = DebugInfo(depth)
+            best_move = move.next_move(depth, board, debug_info)
             current_best_move = best_move
             current_debug_info = debug_info
 
@@ -46,11 +48,11 @@ def benchmark_template(msg, n, result_func, depth, board):
         )
     )
 
-    move_details = [str(x) for x in current_debug_info["move_details"].values()]
+    move_details = [str(x) for x in current_debug_info.move_details.values()]
     move_details.reverse()
 
     return str(current_best_move), (
-        current_debug_info["nodes_searched"],
+        current_debug_info.nodes_searched,
         move_details,
     )
 
@@ -71,7 +73,6 @@ def benchmark():
     number_of_runs = [500, 50, 20, 5, 1]
     boards = [
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
-        "r1bqkbnr/pppppppp/n7/6N1/8/8/PPPPPPPP/RNBQKB1R b - - 0 1",
     ]
     msg = "Benchmark best move for depth #, number of iterations $"
 

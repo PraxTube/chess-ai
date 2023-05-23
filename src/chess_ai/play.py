@@ -4,40 +4,21 @@ from chess_ai import inout
 from chess_ai import log
 
 
-def main_loop(depth, do_debug=True):
-    if do_debug:
-        main_loop_debug(depth)
-    else:
-        main_loop_no_debug(depth)
-
-
-def main_loop_debug(depth):
+def main_loop(depth, debug_info, turn_limit=-1):
     board = chess.Board()
 
-    for i in range(1, depth):
-        log.debug_info["move_details"][i] = None
+    while turn_limit != 0:
+        turn_limit -= 1
 
-    while True:
-        best_move = next_move(depth, board)
+        best_move = next_move(depth, board, debug_info)
         if not best_move:
             game_over(board)
             break
-        inout.print_board(board, best_move)
+        inout.print_board(board, best_move, debug_info)
 
         board.make_move(best_move)
-        log.append_log_file(best_move)
-        log.append_extensive_log_file(board)
-
-
-def main_loop_no_debug(depth):
-    board = chess.Board()
-
-    while True:
-        best_move = next_move(depth, board)
-        if not best_move:
-            break
-
-        board.make_move(best_move)
+        log.append_log_file(best_move, debug_info)
+        log.append_extensive_log_file(board, debug_info)
 
 
 def game_over(board):

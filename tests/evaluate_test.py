@@ -1,5 +1,4 @@
 import chess_ai.chess_engine as chess
-
 from chess_ai.evaluate import evaluate_board
 
 
