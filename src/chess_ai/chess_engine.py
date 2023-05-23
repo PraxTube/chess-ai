@@ -363,7 +363,7 @@ class Board:
         self.checkmate = False
         self.stalemate = False
         if len(moves) == 0:
-            if self.in_check():
+            if self.is_in_check():
                 self.checkmate = True
             else:
                 self.stalemate = True
@@ -371,7 +371,7 @@ class Board:
         self.current_castling_rights = temp_castle_rights
         return moves
 
-    def in_check(self):
+    def is_in_check(self):
         if self.white_to_move:
             return self.square_under_attack(
                 self.white_king_location[0], self.white_king_location[1]
