@@ -6,31 +6,25 @@ from tqdm import tqdm
 
 import chess_ai.chess_engine as chess
 from chess_ai.evaluate import evaluate_board
-from chess_ai.log import debug_info
 
 
-def next_move(
-    depth: int, board: chess.GameState, debug=True, return_debug_info=False
-) -> chess.Move:
-    if debug:
-        debug_info["nodes_searched"] = 0
+def next_move(depth: int, board: chess.Board, debug_info) -> chess.Move:
+    debug_info.reset_nodes()
 
-    move = minimax_root(depth, board)
+    move = minimax_root(depth, board, debug_info)
 
-    if return_debug_info:
-        return move, debug_info
     return move
 
 
-def get_ordered_moves(board: chess.GameState) -> List[chess.Move]:
+def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
     def orderer(move):
         return evaluate_board(board, move)
 
-    in_order = sorted(board.getValidMoves(), key=orderer, reverse=(board.white_to_move))
+    in_order = sorted(board.legal_moves(), key=orderer, reverse=(board.white_to_move))
     return list(in_order)
 
 
-def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
+def minimax_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
     maximize = board.white_to_move
     best_move = -float("inf") if maximize else float("inf")
 
@@ -52,9 +46,9 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
         if time.time() - start_time >= allocated_time:
             return best_move_found
 
-        board.makeMove(move)
-        value = alpha_beta(depth - 1, board, not maximize)
-        board.undoMove()
+        board.make_move(move)
+        value = alpha_beta(depth - 1, board, not maximize, debug_info)
+        board.undo_move()
 
         if maximize and value >= best_move:
             best_move = value
@@ -66,18 +60,16 @@ def minimax_root(depth: int, board: chess.GameState) -> chess.Move:
 
 
 def alpha_beta(
-    depth: int,
-    board: chess.GameState,
-    is_maximising_player: bool,
+    depth: int, board: chess.Board, is_maximising_player: bool, debug_info
 ) -> float:
     if is_maximising_player:
-        return alpha_beta_max(-float("inf"), float("inf"), depth, board)
+        return alpha_beta_max(-float("inf"), float("inf"), depth, board, debug_info)
     else:
-        return alpha_beta_min(-float("inf"), float("inf"), depth, board)
+        return alpha_beta_min(-float("inf"), float("inf"), depth, board, debug_info)
 
 
-def alpha_beta_max(alpha, beta, depth, board):
-    debug_info["nodes_searched"] += 1
+def alpha_beta_max(alpha, beta, depth, board, debug_info):
+    debug_info.increment_nodes()
 
     if depth == 0:
         return evaluate_board(board)
@@ -85,20 +77,20 @@ def alpha_beta_max(alpha, beta, depth, board):
     moves = get_ordered_moves(board)
 
     for move in moves:
-        board.makeMove(move)
-        current_value = alpha_beta_min(alpha, beta, depth - 1, board)
-        board.undoMove()
+        board.make_move(move)
+        current_value = alpha_beta_min(alpha, beta, depth - 1, board, debug_info)
+        board.undo_move()
 
         if current_value >= beta:
             return beta
         if current_value > alpha:
             alpha = current_value
-            debug_info["move_details"][depth] = move.coordinate()
+            debug_info.move_details[depth] = move.coordinate()
     return alpha
 
 
-def alpha_beta_min(alpha, beta, depth, board):
-    debug_info["nodes_searched"] += 1
+def alpha_beta_min(alpha, beta, depth, board, debug_info):
+    debug_info.increment_nodes()
 
     if depth == 0:
         return evaluate_board(board)
@@ -106,13 +98,13 @@ def alpha_beta_min(alpha, beta, depth, board):
     moves = get_ordered_moves(board)
 
     for move in moves:
-        board.makeMove(move)
-        current_value = alpha_beta_max(alpha, beta, depth - 1, board)
-        board.undoMove()
+        board.make_move(move)
+        current_value = alpha_beta_max(alpha, beta, depth - 1, board, debug_info)
+        board.undo_move()
 
         if current_value <= alpha:
             return alpha
         if current_value < beta:
             beta = current_value
-            debug_info["move_details"][depth] = move.coordinate()
+            debug_info.move_details[depth] = move.coordinate()
     return beta

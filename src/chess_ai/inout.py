@@ -1,11 +1,10 @@
 from chess_ai.evaluate import evaluate_board
-from chess_ai.log import debug_info
 
 
-def print_board(board, best_move):
+def print_board(board, best_move, debug_info):
     evaluation_ratio = evaluate_board(board)
-    boards_searched = debug_info["nodes_searched"]
-    move_details = debug_info["move_details"]
+    boards_searched = debug_info.nodes_searched
+    move_details = debug_info.move_details
     print("\n------------\n")
     print(board)
     print(f"\nCurrent Evaluation of the board is: {evaluation_ratio}")
