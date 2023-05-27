@@ -155,54 +155,54 @@ mg_piece_values = np.array(
         1025,
         9999,
     ]
-)  # [pawn, knight, bishop, rook , queen , king ] I think I am not sure
+)
 eg_piece_values = np.array([94, 281, 297, 512, 936, 9999])
 
-
-def evaluate_board(board, move=None):
-    eval_sum = material_value(board, move)
-
-    if move:
-        board.make_move(move)
-        B = board.to_np()
-        board.undo_move()
-    else:
-        B = board.to_np()
-
-    piece_values = [1, 2, 3, 4, 5, 6]
-    tables = [
+mg_total_table = np.vstack(
+    (
         mg_pawn_table,
         mg_knight_table,
         mg_bishop_table,
         mg_rook_table,
         mg_queen_table,
         mg_king_table,
-    ]
+        np.flipud(mg_pawn_table),
+        np.flipud(mg_knight_table),
+        np.flipud(mg_bishop_table),
+        np.flipud(mg_rook_table),
+        np.flipud(mg_queen_table),
+        np.flipud(mg_king_table),
+    )
+)
+mg_piece_values_table = np.vstack((
+    np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(48, 8),
+    np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(48, 8) * -1,
+    ))
 
-    for i, table in enumerate(tables):
-        eval_sum += np.sum(np.dot(table, B == piece_values[i]))
-        eval_sum -= np.sum(np.dot(np.flipud(table), B == -piece_values[i]))
-
-    return eval_sum
+piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
 
-def material_value(board, move=None):
-    start_fen = board.fen()
+def evaluate_board(board, move=None):
+    start_B = board.to_np()
 
     if move:
         board.make_move(move)
-        fen_string = board.fen().split()[0]
+        B = board.to_np()
         board.undo_move()
     else:
-        fen_string = board.fen().split()[0]
+        B = board.to_np()
 
-    if start_fen != board.fen():
+    if not np.array_equal(start_B, board.to_np()):
         raise ValueError(
-            "The board was not properly cleaned up!", start_fen, board.fen()
+            "The board was not properly cleaned up!", start_B, board.to_np()
         )
 
-    piece_chars = ["p", "b", "n", "r", "q", "k"]
-    white_pieces = np.array([fen_string.count(x.upper()) for x in piece_chars])
-    black_pieces = np.array([fen_string.count(x) for x in piece_chars])
+    B_reshaped = B.reshape((1, 8, 8))
+    masks = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
+    B_total_mask = np.vstack(masks)
+    B_total_mask = B_total_mask.reshape((-1, 8))
 
-    return white_pieces.dot(mg_piece_values) - black_pieces.dot(mg_piece_values)
+    eval_sum = np.sum(mg_total_table[B_total_mask])
+    eval_sum += np.sum(mg_piece_values_table[B_total_mask])
+
+    return eval_sum
