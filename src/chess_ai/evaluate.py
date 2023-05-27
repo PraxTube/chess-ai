@@ -158,7 +158,7 @@ mg_piece_values = np.array(
 )
 eg_piece_values = np.array([94, 281, 297, 512, 936, 9999])
 
-mg_total_table = np.vstack(
+mg_total_table = np.stack(
     (
         mg_pawn_table,
         mg_knight_table,
@@ -174,10 +174,12 @@ mg_total_table = np.vstack(
         np.flipud(mg_king_table),
     )
 )
-mg_piece_values_table = np.vstack((
-    np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(48, 8),
-    np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(48, 8) * -1,
-    ))
+mg_piece_values_table = np.vstack(
+    (
+        np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(6, 8, 8),
+        np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(6, 8, 8) * -1,
+    )
+)
 
 piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
@@ -198,11 +200,9 @@ def evaluate_board(board, move=None):
         )
 
     B_reshaped = B.reshape((1, 8, 8))
-    masks = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
-    B_total_mask = np.vstack(masks)
-    B_total_mask = B_total_mask.reshape((-1, 8))
+    mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
 
-    eval_sum = np.sum(mg_total_table[B_total_mask])
-    eval_sum += np.sum(mg_piece_values_table[B_total_mask])
+    eval_sum = np.sum(mg_total_table[mask])
+    eval_sum += np.sum(mg_piece_values_table[mask])
 
     return eval_sum
