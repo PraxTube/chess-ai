@@ -4,8 +4,11 @@ from chess_ai import inout
 from chess_ai import log
 
 
-def main_loop(depth, debug_info, turn_limit=-1):
-    board = chess.Board()
+def main_loop(depth, debug_info, turn_limit=-1, fen=""):
+    if fen == "":
+        board = chess.Board()
+    else:
+        board = chess.Board(fen)
 
     while turn_limit != 0:
         turn_limit -= 1
@@ -20,19 +23,30 @@ def main_loop(depth, debug_info, turn_limit=-1):
         log.append_log_file(best_move, debug_info)
         log.append_extensive_log_file(board, debug_info)
 
+    if turn_limit == 0:
+        return -1
+
+    if board.checkmate:
+        return 1 if not board.white_to_move else 2
+    elif board.stalemate:
+        return 0
+    raise ValueError("The board didn't end yet!", board.fen())
+
 
 def game_over(board):
-    if not board.checkmate:
-        raise ValueError("The board indicated that it's not checkmate!", board.fen())
+    if not (board.checkmate or board.stalemate):
+        raise ValueError("The board indicated that it's not over yet!", board.fen())
 
     moves = board.legal_moves()
     if moves:
         raise ValueError(
-            "Checkmate! But board indicates that there are possible moves!", moves
+            "Game Over! But board indicates that there are possible moves!",
+            moves,
+            board.fen(),
         )
 
     winner = "White - Max" if not board.white_to_move else "Black - Min"
     print(f"\n\nCHECKMATE!\n---\nThe winner is {winner}!")
-    print("The end baord is:\n")
+    print("The end board is:\n")
     print(board)
     print(f"\nFEN:\n{board.fen()}")

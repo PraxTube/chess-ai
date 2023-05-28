@@ -12,13 +12,22 @@ parser.add_argument(
     default=3,
     help="The depth for the alpha-beta tree search",
 )
+parser.add_argument(
+    "-f",
+    "--fen",
+    action="store",
+    type=str,
+    default="",
+    help="The start fen, default is the start position",
+)
 args = parser.parse_args()
 
 
 def main():
     depth = args.depth
     debug_info = DebugInfo(depth)
-    main_loop(depth, debug_info)
+    fen = args.fen
+    result = main_loop(depth, debug_info, turn_limit=-1, fen=fen)
 
 
 if __name__ == "__main__":

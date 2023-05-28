@@ -1,8 +1,10 @@
+import pytest
+
 from chess_ai import play
 from chess_ai.log import DebugInfo
 
 
-def test_main_loop():
+def test_debug_info():
     depth = 1
     debug_info = DebugInfo(depth)
     play.main_loop(depth, debug_info, turn_limit=3)
@@ -50,3 +52,13 @@ def test_main_loop():
 
     assert isinstance(debug_info.move_details, dict)
     assert 2 == len(debug_info.move_details)
+
+
+@pytest.mark.timeout(1)
+def test_start_fen():
+    depth = 2
+    debug_info = DebugInfo(depth)
+    fen = "8/6k1/6p1/5p2/2K5/4b1P1/4n3/8 w - - 1 7"
+    result = play.main_loop(depth, debug_info, fen=fen)
+
+    assert result == 1
