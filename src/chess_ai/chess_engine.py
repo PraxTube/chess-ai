@@ -11,6 +11,12 @@ class Board:
         "q",
         "k",
     ]
+    hill_winning_positions = [
+        (3, 3),
+        (3, 4),
+        (4, 3),
+        (4, 4),
+    ]
 
     def __init__(self, fen_board=None):
         if not fen_board:
@@ -227,6 +233,7 @@ class Board:
 
         self.update_castle_rights(move)
         self.castle_rights_log.append(self.current_castling_rights.copy())
+        self.check_king_of_the_hill_condition()
 
     def undo_move(self):
         if len(self.move_log) == 0:
@@ -754,6 +761,13 @@ class Board:
                 self.white_king_location = (row, col)
             else:
                 self.black_king_location = (row, col)
+
+    def check_king_of_the_hill_condition(self):
+        if (
+            self.white_king_location in self.hill_winning_positions
+            or self.black_king_location in self.hill_winning_positions
+        ):
+            self.checkmate = True
 
     def castle_moves(self, row, col, moves):
         if self.square_under_attack(row, col):
