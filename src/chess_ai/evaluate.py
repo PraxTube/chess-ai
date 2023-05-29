@@ -1,6 +1,8 @@
 import numpy as np
 
 
+INF = 99999
+
 mg_pawn_table = np.array(
     [
         [0, 0, 0, 0, 0, 0, 0, 0],
@@ -166,12 +168,12 @@ mg_total_table = np.stack(
         mg_rook_table,
         mg_queen_table,
         mg_king_table,
-        np.flipud(mg_pawn_table),
-        np.flipud(mg_knight_table),
-        np.flipud(mg_bishop_table),
-        np.flipud(mg_rook_table),
-        np.flipud(mg_queen_table),
-        np.flipud(mg_king_table),
+        np.flipud(mg_pawn_table) * -1,
+        np.flipud(mg_knight_table) * -1,
+        np.flipud(mg_bishop_table) * -1,
+        np.flipud(mg_rook_table) * -1,
+        np.flipud(mg_queen_table) * -1,
+        np.flipud(mg_king_table) * -1,
     )
 )
 mg_piece_values_table = np.vstack(
@@ -185,6 +187,9 @@ piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
 
 def evaluate_board(board, move=None):
+    if board.checkmate:
+        return -INF if board.white_to_move else INF
+
     start_B = board.to_np()
 
     if move:
@@ -204,5 +209,8 @@ def evaluate_board(board, move=None):
 
     eval_sum = np.sum(mg_total_table[mask])
     eval_sum += np.sum(mg_piece_values_table[mask])
+
+    if board.stalemate:
+        return -eval_sum
 
     return eval_sum
