@@ -123,3 +123,16 @@ def test_king_of_the_hill_evaluation():
     checkmate_board = chess.Board("3r4/2k5/2p5/8/4K3/8/8/8 b - - 0 1")
     assert checkmate_board.checkmate
     assert INF == evaluate_board(checkmate_board)
+
+    mate_in_one_board = chess.Board("8/6k1/6p1/5p2/2K5/4b1P1/4n3/8 w - - 0 1")
+    for move in mate_in_one_board.legal_moves():
+        if move.coordinate() == "c4d5":
+            mate_move = move
+            break
+    assert mate_move
+
+    assert INF == evaluate_board(mate_in_one_board, mate_move)
+
+    mate_in_one_board.make_move(mate_move)
+    assert mate_in_one_board.checkmate
+    assert INF == evaluate_board(mate_in_one_board)
