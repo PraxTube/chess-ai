@@ -54,11 +54,22 @@ def test_debug_info():
     assert 2 == len(debug_info.move_details)
 
 
-@pytest.mark.timeout(1)
-def test_start_fen():
-    depth = 2
+@pytest.mark.timeout(10)
+def test_start_fen_koth():
+    depths = [1, 2, 3, 4, 5]
+    for depth in depths:
+        debug_info = DebugInfo(depth)
+        fen = "8/6k1/6p1/5p2/2K5/4b1N1/4n3/8 w - - 1 7"
+        result = play.main_loop(depth, debug_info, turn_limit=2, fen=fen)
+
+        assert result == 1, f"Failed at depth: {depth}, {result} == {1}"
+
+
+@pytest.mark.timeout(5)
+def test_start_fen_checkmate():
+    depth = 4
     debug_info = DebugInfo(depth)
-    fen = "8/6k1/6p1/5p2/2K5/4b1P1/4n3/8 w - - 1 7"
-    result = play.main_loop(depth, debug_info, fen=fen)
+    fen = "8/5p2/5P1p/5PkN/6P1/4N1Rp/7P/6KQ w - - 0 2"
+    result = play.main_loop(depth, debug_info, turn_limit=4, fen=fen)
 
     assert result == 1

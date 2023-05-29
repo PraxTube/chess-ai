@@ -27,7 +27,7 @@ def main():
     depth = args.depth
     debug_info = DebugInfo(depth)
     fen = args.fen
-    result = main_loop(depth, debug_info, turn_limit=-1, fen=fen)
+    _ = main_loop(depth, debug_info, turn_limit=-1, fen=fen)
 
 
 if __name__ == "__main__":
