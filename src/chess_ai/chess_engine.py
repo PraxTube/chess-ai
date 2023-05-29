@@ -145,27 +145,13 @@ class Board:
         self.castle_rights_log = [self.current_castling_rights.copy()]
 
     def setup_fen_board(self, fen_board):
+        self.setup_default_board()
         self.board = self.fen_to_board(fen_board)
-        self.move_functions = {
-            1: self.pawn_moves,
-            2: self.knight_moves,
-            3: self.bishop_moves,
-            4: self.rook_moves,
-            5: self.queen_moves,
-            6: self.king_moves,
-        }
         self.white_to_move = fen_board.split()[1] == "w"
         self.white_king_location = self.find_piece(6)
         self.black_king_location = self.find_piece(-6)
-        self.checkmate = False
-        self.stalemate = False
-        self.in_check = False
+
         fen_castle_rights = fen_board.split()[2]
-        self.pins = []
-        self.checks = []
-        self.move_log = []
-        self.enpassant_possible = ()
-        self.enpassant_possible_log = [self.enpassant_possible]
         self.current_castling_rights = [
             "K" in fen_castle_rights,
             "Q" in fen_castle_rights,
@@ -173,6 +159,11 @@ class Board:
             "q" in fen_castle_rights,
         ]
         self.castle_rights_log = [self.current_castling_rights.copy()]
+
+        self.in_check = self.is_in_check()
+        # This sets checkmate or stalemate if that is the case
+        _ = self.legal_moves()
+        self.check_king_of_the_hill_condition()
 
     def find_piece(self, piece):
         for row in range(len(self.board)):
