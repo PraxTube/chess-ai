@@ -187,22 +187,28 @@ piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
 
 def evaluate_board(board, move=None):
-    if board.checkmate:
-        return -INF if board.white_to_move else INF
-
     start_B = board.to_np()
 
     if move:
         board.make_move(move)
         B = board.to_np()
+        checkmate = board.checkmate
+        stalemate = board.stalemate
+        white_to_move = board.white_to_move
         board.undo_move()
     else:
         B = board.to_np()
+        checkmate = board.checkmate
+        stalemate = board.stalemate
+        white_to_move = board.white_to_move
 
     if not np.array_equal(start_B, board.to_np()):
         raise ValueError(
             "The board was not properly cleaned up!", start_B, board.to_np()
         )
+
+    if checkmate:
+        return -INF if white_to_move else INF
 
     B_reshaped = B.reshape((1, 8, 8))
     mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
@@ -210,7 +216,6 @@ def evaluate_board(board, move=None):
     eval_sum = np.sum(mg_total_table[mask])
     eval_sum += np.sum(mg_piece_values_table[mask])
 
-    if board.stalemate:
+    if stalemate:
         return -eval_sum
-
     return eval_sum

@@ -6,13 +6,13 @@ from tqdm import tqdm
 
 import chess_ai.chess_engine as chess
 from chess_ai.evaluate import evaluate_board
+from chess_ai.evaluate import INF
 
 
 def next_move(depth: int, board: chess.Board, debug_info) -> chess.Move:
     debug_info.reset_nodes()
 
-    move = minimax_root(depth, board, debug_info)
-
+    move = alpha_beta_root(depth, board, debug_info)
     return move
 
 
@@ -20,16 +20,16 @@ def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
     def orderer(move):
         return evaluate_board(board, move)
 
-    in_order = sorted(board.legal_moves(), key=orderer, reverse=(board.white_to_move))
-    return list(in_order)
+    ordered_moves = list(
+        sorted(board.legal_moves(), key=orderer, reverse=(board.white_to_move))
+    )
+    return ordered_moves
 
 
-def minimax_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
-    maximize = board.white_to_move
-    best_move = -float("inf") if maximize else float("inf")
+def alpha_beta_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
+    best_move = -INF if board.white_to_move else INF
 
     moves = get_ordered_moves(board)
-
     if len(moves) == 0:
         return None
 
@@ -39,7 +39,7 @@ def minimax_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
     allocated_time = 100
 
     for move in tqdm(moves, desc="Searching moves..."):
-        if not maximize:
+        if not board.white_to_move:
             index = random.randint(0, len(moves) - 1)
             return moves[index]
 
@@ -47,25 +47,26 @@ def minimax_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
             return best_move_found
 
         board.make_move(move)
-        value = alpha_beta(depth - 1, board, not maximize, debug_info)
+        value = alpha_beta(depth - 1, board, debug_info)
         board.undo_move()
 
-        if maximize and value >= best_move:
+        if board.white_to_move and value >= best_move:
             best_move = value
             best_move_found = move
-        elif not maximize and value <= best_move:
+        elif not board.white_to_move and value <= best_move:
             best_move = value
             best_move_found = move
     return best_move_found
 
 
-def alpha_beta(
-    depth: int, board: chess.Board, is_maximising_player: bool, debug_info
-) -> float:
-    if is_maximising_player:
-        return alpha_beta_max(-float("inf"), float("inf"), depth, board, debug_info)
+def alpha_beta(depth: int, board: chess.Board, debug_info) -> int:
+    if board.checkmate or board.stalemate:
+        return evaluate_board(board) + depth
+
+    if board.white_to_move:
+        return alpha_beta_max(-INF, INF, depth, board, debug_info)
     else:
-        return alpha_beta_min(-float("inf"), float("inf"), depth, board, debug_info)
+        return alpha_beta_min(-INF, INF, depth, board, debug_info)
 
 
 def alpha_beta_max(alpha, beta, depth, board, debug_info):
