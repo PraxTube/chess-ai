@@ -42,7 +42,14 @@ bigger files.
 
 ## AI
 
+There were quite a lot of changes regarding the AI.
+I implemented the following changes:
 
+- Check if given node is terminal node (checkmate/stalemate)
+  as opposed to only checking `depth == 0`
+- Add a proper king of the hill victory condition (and properly test it)
+
+TODO
 
 ## Benchmarks
 
