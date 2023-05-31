@@ -4,6 +4,9 @@ import numpy as np
 import cffi
 
 
+INF = 99999
+EMPTY_SCORE = 42069
+
 ffi = cffi.FFI()
 
 ffi.cdef(
@@ -14,20 +17,18 @@ typedef struct {
 } TranspositionEntry;
 """
 )
-ffi.cdef("void init_zobrist_keys();")
+ffi.cdef("void init();")
 ffi.cdef("TranspositionEntry get_table(int (*board)[8]);")
 ffi.cdef("void set_table(uint64_t hash, int score);")
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 transposition_lib = ffi.dlopen(os.path.join(script_dir, "transposition_tables.so"))
 
-transposition_lib.init_zobrist_keys()
+transposition_lib.init()
 
 # transposition_lib.get_table.argtypes = [ffi.typeof("int[64]")]
 # transposition_lib.get_table.restype = ffi.typeof("TranspositionEntry")
 
-INF = 99999
-EMPTY_SCORE = 42069
 
 mg_pawn_table = np.array(
     [
@@ -240,6 +241,7 @@ def evaluate_board(board, move=None, use_table=True):
     transposition_entry = transposition_lib.get_table(data_ptr)
 
     if use_table and transposition_entry.score != EMPTY_SCORE:
+        raise ValueError(transposition_entry.score)
         # TODO Add debug info transpositions
         return transposition_entry.score
 

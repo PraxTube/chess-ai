@@ -25,6 +25,17 @@ void init_zobrist_keys() {
     }
 }
 
+void init_table() {
+    for (size_t i = 0; i < TABLE_ENTRIES; i++) {
+        table[i].score = EMPTY_SCORE;
+    }
+}
+
+void init() {
+    init_zobrist_keys();
+    init_table();
+}
+
 uint64_t get_piece_index(int piece_value) {
     if (piece_value >= 0) {
         return piece_value;
@@ -57,9 +68,5 @@ TranspositionEntry get_table(int (*board)[8]) {
     uint64_t hash = get_hash(board);
     int index = hash % TABLE_ENTRIES;
     TranspositionEntry entry = table[index];
-    if (entry.hash == hash) {
-        return entry;
-    }
-    set_table(hash, EMPTY_SCORE);
     return entry;
 }
