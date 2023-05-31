@@ -86,7 +86,7 @@ def bench_move(board, move):
 def bench_evaluate(board, move=None):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
-            evaluate.evaluate_board(board, move)
+            evaluate.evaluate_board(board, move, use_table=False)
 
 
 def bench_best_move(depth, board, debug_info):

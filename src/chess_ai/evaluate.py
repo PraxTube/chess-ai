@@ -1,7 +1,33 @@
-import numpy as np
+import os
 
+import numpy as np
+import cffi
+
+
+ffi = cffi.FFI()
+
+ffi.cdef(
+    """
+typedef struct {
+    uint64_t hash;
+    int score;
+} TranspositionEntry;
+"""
+)
+ffi.cdef("void init_zobrist_keys();")
+ffi.cdef("TranspositionEntry get_table(int (*board)[8]);")
+ffi.cdef("void set_table(uint64_t hash, int score);")
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+transposition_lib = ffi.dlopen(os.path.join(script_dir, "transposition_tables.so"))
+
+transposition_lib.init_zobrist_keys()
+
+# transposition_lib.get_table.argtypes = [ffi.typeof("int[64]")]
+# transposition_lib.get_table.restype = ffi.typeof("TranspositionEntry")
 
 INF = 99999
+EMPTY_SCORE = 42069
 
 mg_pawn_table = np.array(
     [
@@ -186,7 +212,7 @@ mg_piece_values_table = np.vstack(
 piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
 
-def evaluate_board(board, move=None):
+def evaluate_board(board, move=None, use_table=True):
     start_B = board.to_np()
 
     if move:
@@ -210,11 +236,20 @@ def evaluate_board(board, move=None):
     if checkmate:
         return -INF if white_to_move else INF
 
+    data_ptr = ffi.cast("int (*)[8]", B.ctypes.data)
+    transposition_entry = transposition_lib.get_table(data_ptr)
+
+    if use_table and transposition_entry.score != EMPTY_SCORE:
+        # TODO Add debug info transpositions
+        return transposition_entry.score
+
     B_reshaped = B.reshape((1, 8, 8))
     mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
 
     eval_sum = np.sum(mg_total_table[mask])
     eval_sum += np.sum(mg_piece_values_table[mask])
+
+    transposition_lib.set_table(transposition_entry.hash, eval_sum)
 
     if stalemate:
         return -eval_sum
