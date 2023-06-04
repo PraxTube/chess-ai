@@ -16,8 +16,8 @@ with the most maintainability in mind.
 The following things were changed:
 
 - Use `snake_casing` consistently
-- Class `CastlingRights` and replace with a `list`
-- Add guard clauses to reduce indentation
+- Replace `class CastlingRights` with a `list`
+- Add guard clauses to reduce indentation and increase readability
 - Turn `debug_info` from `dict` to a `class` (in `log.py`)
 - Use `list` of `int` for board instead of `str`
 
@@ -27,14 +27,14 @@ commit history in #37.
 The way I restructured the backend was actually
 very teaching. At first I wanted to simply write
 the whole backend from scratch with the new changes.
-However I quickly realized that this wouldn't really
+However, I quickly realized that this wouldn't really
 work. So instead I opted to apply the changes in layers,
 where after each change the whole backend should still
 be working.
 
-This was extremely effective. It not only allowed to
+This was extremely effective. It not only allowed me to
 assert that the changes I made didn't introduce new bugs,
-but it also made commiting very clean, and also made sure
+but also made commiting very clean, and also made sure
 that I would be able to track down bugs if they did occur.
 So in future projects I will use the same way to restructure
 bigger files.
@@ -42,12 +42,15 @@ bigger files.
 ## AI
 
 There were quite a lot of changes regarding the AI.
-I implemented the following changes:
+I mainly tried to implement transposition tables,
+however that went horribly wrong.
+I wrote a seperate article in which I documented what went wrong,
+[see here](./transposition-tables.md).
+Apart from that set back, I implemented the following changes:
 
 - Check if given node is terminal node (checkmate/stalemate)
   as opposed to only checking `depth == 0`
 - Add a proper king of the hill victory condition (and properly test it)
-- Try to add [transposition tables but fail miserably](./transposition-tables.md)
 
 TODO
 
@@ -67,6 +70,7 @@ TODO
 - performing tests under same-ish conditions
 - before commiting for something huge, try to gauge if it will be worth it
   (evaluation and C scripts as well as numpy refactors)
+- hashing is hard to debug
 
 ## Future Improvements
 
