@@ -219,3 +219,42 @@ def evaluate_board(board, move=None):
     if stalemate:
         return -eval_sum
     return eval_sum
+
+
+def soft_evaluate_board(board, move):
+    if not move:
+        raise ValueError("Soft evaluation requires a move to be passed.")
+
+    piece_values = [
+        82,
+        337,
+        365,
+        477,
+        1025,
+        9999,
+    ]
+
+    board.make_move(move)
+    checkmate = board.checkmate
+    stalemate = board.stalemate
+
+    eval_sum = 100 if board.in_check else 0
+    for row in board.board:
+        for piece in row:
+            if piece == 0:
+                continue
+
+            if piece > 0:
+                eval_sum += piece_values[piece - 1]
+            else:
+                eval_sum -= piece_values[-piece - 1]
+
+    white_to_move = board.white_to_move
+    board.undo_move()
+
+    if checkmate:
+        return -INF if white_to_move else INF
+
+    if stalemate:
+        return -eval_sum
+    return eval_sum
