@@ -51,6 +51,9 @@ Apart from that set back, I implemented the following changes:
 - Check if given node is terminal node (checkmate/stalemate)
   as opposed to only checking `depth == 0`
 - Add a proper king of the hill victory condition (and properly test it)
+- Improve time management to be more dynamic (allocate time depending
+  on the current stage, early, mid late)
+- Refactor move ordering to be much more performant
 
 TODO
 
@@ -64,13 +67,35 @@ TODO
 
 ## Lessons learned
 
-- benchmarks are extremely important, see numpy -> list
-- unit tests are also vital, especially when restructuring (breaking changes)
-- when restructuring, keep atomic commits ALWAYS, don't restructure multiple things at once
-- performing tests under same-ish conditions
-- before commiting for something huge, try to gauge if it will be worth it
-  (evaluation and C scripts as well as numpy refactors)
-- hashing is hard to debug
+A collection of lessons that I learned during this milestone
+
+1. Benchmarks are extremely useful to not only see improvements
+   over different versions of your code, but also to compare
+   incremental changes to the code. I realized this when I tried
+   to refactor the evaluation function to use numpy. When I had
+   many small `np.ndarray` it was actually slower then the python
+   `list` implementation. I noticed that this was because we always
+   have overhead when calling numpy, so I should reduce the number
+   of times I make a numpy call, i.e. use as big as arrays as possible.
+   That I did, and the evaluation function went from `200μs` to `50μs`.
+1. On the note of benchmarks, I also observed that background tasks
+   can significantly influence the result of benchmarks. One should
+   try to run them in same environment (or use a server for that if possible).
+1. Sticking to atomic commits when restructuring something big is vital.
+   It allows to keep a running system which can be checked to make sure
+   no bugs went into the restructure.
+1. When I refactored the backend, the unit tests really came in handy.
+   After every commit I could just run the tests and see if there
+   were any issues.
+1. It's important to now if something will be worthwile before commiting
+   to it if it will take a long time to complete. I learned this with
+   the attempt at implementing transposition tables and when trying to refactor
+   the evaluation with numpy arrays. If I would have known
+   that the potential performance increase was about `~10%`, I would have
+   probably not even tried it in the first place, given how much effort
+   went into it. The numpy refactor was luckily successful.
+1. Debug hash tables is actually not as straightfoward as it initally
+   seemed like.
 
 ## Future Improvements
 
