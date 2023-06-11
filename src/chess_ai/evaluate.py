@@ -191,16 +191,14 @@ def evaluate_board(board, move=None):
 
     if move:
         board.make_move(move)
-        B = board.to_np()
-        checkmate = board.checkmate
-        stalemate = board.stalemate
-        white_to_move = board.white_to_move
+
+    B = board.to_np()
+    checkmate = board.checkmate
+    stalemate = board.stalemate
+    white_to_move = board.white_to_move
+
+    if move:
         board.undo_move()
-    else:
-        B = board.to_np()
-        checkmate = board.checkmate
-        stalemate = board.stalemate
-        white_to_move = board.white_to_move
 
     if not np.array_equal(start_B, board.to_np()):
         raise ValueError(
@@ -221,10 +219,7 @@ def evaluate_board(board, move=None):
     return eval_sum
 
 
-def soft_evaluate_board(board, move):
-    if not move:
-        raise ValueError("Soft evaluation requires a move to be passed.")
-
+def soft_evaluate_board(board, move=None):
     piece_values = [
         82,
         337,
@@ -234,7 +229,9 @@ def soft_evaluate_board(board, move):
         9999,
     ]
 
-    board.make_move(move)
+    if move:
+        board.make_move(move)
+
     checkmate = board.checkmate
     stalemate = board.stalemate
 
@@ -250,7 +247,9 @@ def soft_evaluate_board(board, move):
                 eval_sum -= piece_values[-piece - 1]
 
     white_to_move = board.white_to_move
-    board.undo_move()
+
+    if move:
+        board.undo_move()
 
     if checkmate:
         return -INF if white_to_move else INF

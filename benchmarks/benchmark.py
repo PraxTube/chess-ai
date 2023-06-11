@@ -24,6 +24,7 @@ msgs = [
     "Making Move",
     "Evaluate Board WITHOUT Move",
     "Evaluate Board",
+    "Soft Evaluation",
     "Best Move Gen",
 ]
 
@@ -87,6 +88,12 @@ def bench_evaluate(board, move=None):
     with contextlib.redirect_stdout(suppress_prints()):
         with contextlib.redirect_stderr(suppress_prints()):
             evaluate.evaluate_board(board, move)
+
+
+def bench_soft_evaluate(board, move=None):
+    with contextlib.redirect_stdout(suppress_prints()):
+        with contextlib.redirect_stderr(suppress_prints()):
+            evaluate.soft_evaluate_board(board, move)
 
 
 def bench_best_move(depth, board, debug_info):
@@ -213,6 +220,26 @@ def benchmark_evaluate(boards):
     )
 
 
+def benchmark_soft_evaluate(boards):
+    n = 10000
+
+    def bench(board):
+        move = board.legal_moves()[0]
+        return timeit.timeit(
+            lambda: bench_soft_evaluate(board, move),
+            number=n,
+            globals=locals(),
+        )
+
+    benchmark_template(
+        5,
+        n,
+        bench,
+        boards,
+        False,
+    )
+
+
 def benchmark_best_move(boards):
     n = 100
     depth = 1
@@ -225,7 +252,7 @@ def benchmark_best_move(boards):
             globals=locals(),
         )
 
-    benchmark_template(5, n, bench, boards, True)
+    benchmark_template(6, n, bench, boards, True)
 
 
 def benchmark():
@@ -244,6 +271,7 @@ def benchmark():
         benchmark_legal_moves(boards_list[i])
         benchmark_move(boards_list[i])
         benchmark_evaluate(boards_list[i])
+        benchmark_soft_evaluate(boards_list[i])
         benchmark_best_move(boards_list[i])
 
     benchmark_dataframe.to_csv("benchmarks/benchmarks.csv", index=False)

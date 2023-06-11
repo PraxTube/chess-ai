@@ -62,7 +62,8 @@ def alpha_beta_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
 
 def alpha_beta(depth: int, board: chess.Board, debug_info) -> int:
     if board.checkmate or board.stalemate:
-        return evaluate_board(board) + depth
+        offset = -depth if board.white_to_move else depth
+        return evaluate_board(board) + offset
 
     if board.white_to_move:
         return alpha_beta_max(-INF, INF, depth, board, debug_info)
