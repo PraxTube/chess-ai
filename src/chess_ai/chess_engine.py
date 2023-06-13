@@ -181,7 +181,7 @@ class Board:
 
     def make_move(self, move):
         if self.checkmate or self.stalemate:
-            raise ValueError("Can't make a move, game is already over.", board.board)
+            raise ValueError("Can't make a move, game is already over.", self.board)
 
         self.board[move.start_row][move.start_col] = 0
         self.board[move.end_row][move.end_col] = move.piece_moved
