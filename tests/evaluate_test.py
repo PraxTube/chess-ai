@@ -139,6 +139,3 @@ def test_king_of_the_hill_evaluation():
     mate_in_one_board.make_move(mate_move)
     assert mate_in_one_board.checkmate
     assert INF == evaluate_board(mate_in_one_board)
-
-
-
