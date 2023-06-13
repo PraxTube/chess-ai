@@ -180,6 +180,9 @@ class Board:
         raise ValueError("Color must be integer of either 1 or -1", color)
 
     def make_move(self, move):
+        if self.checkmate or self.stalemate:
+            raise ValueError("Can't make a move, game is already over.", board.board)
+
         self.board[move.start_row][move.start_col] = 0
         self.board[move.end_row][move.end_col] = move.piece_moved
         self.move_log.append(move)  # log the move so we can undo it later
