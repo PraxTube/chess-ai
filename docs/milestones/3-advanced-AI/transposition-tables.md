@@ -103,7 +103,7 @@ the amount of cutoffs in depth 3 is actually a perfect
 cutoff and it also explains why the total time for
 the best move generation is so high).
 
-Overall I learned a lot, however I did cost me a lot
+Overall I learned a lot, however it did cost me a lot
 of time as well, with little to nothing to show for now.
 Perhaps I will come back to the transposistion tables
 in a later stage, but I doubt it.

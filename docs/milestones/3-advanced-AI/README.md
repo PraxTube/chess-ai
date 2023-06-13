@@ -6,13 +6,26 @@ A chess AI written in Python.
 
 ## Summary
 
+A quick overview of what happend in this milestone:
+
+- Restructured the chess backend
+    - Clean ups like name conventions
+    - Using `list` of `int`
+    - Minor bug fixes
+- Improve AI
+    - Speed up evaluation
+    - Improve move ordering
+    - Minor bug fixes
+- Restructure the debug log
+- Add king of the hill conditions
+- Better and more tests and benchmarks
 
 ## Changes to the Chess Backend
 
 The backend was in dire need of a restructure.
-It was created it in a rush to meet the deadline
+It was created in a rush to meet the deadline
 of the first milestone and was therefore not written
-with the most maintainability in mind.
+with maintainability in mind.
 The following things were changed:
 
 - Use `snake_casing` consistently
@@ -22,7 +35,7 @@ The following things were changed:
 - Use `list` of `int` for board instead of `str`
 
 For a more detailed description see the
-commit history in #37.
+[commit history in #37](https://github.com/PraxTube/chess-ai/pull/37/commits).
 
 The way I restructured the backend was actually
 very teaching. At first I wanted to simply write
@@ -46,56 +59,91 @@ I mainly tried to implement transposition tables,
 however that went horribly wrong.
 I wrote a seperate article in which I documented what went wrong,
 [see here](./transposition-tables.md).
-Apart from that set back, I implemented the following changes:
+Apart from that _minor_ set back, I implemented the following changes:
 
 - Check if given node is terminal node (checkmate/stalemate)
   as opposed to only checking `depth == 0`
 - Add a proper king of the hill victory condition (and properly test it)
 - Improve time management to be more dynamic (allocate time depending
-  on the current stage, early, mid late)
+  on the current stage: early, mid, late)
 - Refactor move ordering to be much more performant
 
-TODO
+The AI is playing both faster and stronger now.
 
 ## Benchmarks
 
-- show plots of the different AI stages
+The results of the backend restructure and the AI refactor were
+pretty successful, as can be seen in the plots below.
+In figure 1 we can see that the advanced AI is overall much faster then
+the previous version. Do note that the dummy version implements minimax
+with an evaluation function that simply calculates the material difference.
+So the evaluation of the dummy is hard to outperform.
 
-## Issues and Bugs
+The tests were run on a PC with the following specs
 
+- CPU: Intel i5-4590, Threads: 4, Cores: 4, 3.7GHz
 
+- RAM: 24GB DDR3
+
+- OS: Zorin 16.2 (Ubuntu based)
+
+<p align="center">
+    <img src="plot.svg" alt="Plot SVG Image">
+    <br>
+    Figure 1: Benchmarks of the different categories across the AI versions.
+</p>
+
+In figure 2 we can see that the advanced AI is much faster then the basic AI.
+We can also observe that we search a lot more nodes then in the dummy AI case.
+This shouldn't be, because the dummy AI implements minimax (and not alpha-beta).
+I fixed a bug during this milestone which is most likely the cause for this.
+In this bug the amount of boards to search was decreased, so the dummy AI
+is actually much slower.
+In other words, the actual speed increase from the minimax to the current AI
+is much more significant. This also explains the rather weird behaviour we
+saw in the last milestone (where the cutoff effect didn't seem that strong).
+
+<p align="center">
+    <img src="plot-depths.svg" alt="Plot Depths SVG Image">
+    <br>
+    Figure 2: Benchmarks of different AI versions in respect to search depth.
+    <br>
+    Note that the number of nodes searched is in thousands (kilo).
+</p>
 
 ## Lessons learned
 
 A collection of lessons that I learned during this milestone
 
-1. Benchmarks are extremely useful to not only see improvements
+1. Benchmarks are extremely useful, not only to see improvements
    over different versions of your code, but also to compare
    incremental changes to the code. I realized this when I tried
-   to refactor the evaluation function to use numpy. When I had
-   many small `np.ndarray` it was actually slower then the python
-   `list` implementation. I noticed that this was because we always
-   have overhead when calling numpy, so I should reduce the number
-   of times I make a numpy call, i.e. use as big as arrays as possible.
+   to refactor the evaluation function to use `numpy`. When I had
+   many small `np.ndarray` it was actually slower then the pure python
+   `list` implementation. This is because we always
+   have overhead when calling numpy, so reducing the amount of times
+   we call `numpy` draws out the full potential of `numpy`,
+   i.e. use as big as arrays as possible.
    That I did, and the evaluation function went from `200μs` to `50μs`.
 1. On the note of benchmarks, I also observed that background tasks
    can significantly influence the result of benchmarks. One should
-   try to run them in same environment (or use a server for that if possible).
+   try to run them in the same-ish environment as possible
+   (or use a server for that if possible).
 1. Sticking to atomic commits when restructuring something big is vital.
    It allows to keep a running system which can be checked to make sure
    no bugs went into the restructure.
-1. When I refactored the backend, the unit tests really came in handy.
+1. Unit tests are really handy when restructuring.
    After every commit I could just run the tests and see if there
-   were any issues.
-1. It's important to now if something will be worthwile before commiting
+   were any issues (of course one shouldn't overly rely on them).
+1. It's important to know if something will be worthwile before commiting
    to it if it will take a long time to complete. I learned this with
-   the attempt at implementing transposition tables and when trying to refactor
-   the evaluation with numpy arrays. If I would have known
+   the attempt at implementing transposition tables. If I would have known
    that the potential performance increase was about `~10%`, I would have
    probably not even tried it in the first place, given how much effort
-   went into it. The numpy refactor was luckily successful.
-1. Debug hash tables is actually not as straightfoward as it initally
-   seemed like.
+   went into it.
+1. Debugging hash tables is actually not as straightfoward as it initially
+   seemed. If you can't use a debugger properly then it's
+   a real mess. Something I want to learn in the future.
 
 ## Future Improvements
 
@@ -103,29 +151,32 @@ I found that I cannot improve the engine much further then
 what I have right now.
 While it would be possible to restructure the whole backend to use
 something like `0x88` or bitboards, that would require an extreme amount
-time and effort. Also, it's doubtful that the those changes would
+time and effort. Also, it's doubtful that those changes would
 have a huge effect in the end, given that the main bottleneck
 will always be python.
 
-Much more interesting would be the refactoring of
-the evaluation function. If the evaluation function
-would be written entirely in C, then there would be
-no overhead when the evaluation function communicates
-with the transposition table. This alone would increase
-performance by around 10%. Additionally, the performance
-boost from switching to pure C would probably give at
-least another 10% - 20% boost.
+One possible refactor is to implement the evaluation
+in pure C. Though I highly doubt that this would increase
+the speed by more then `30%`, and given that I just learned
+that commiting to things you aren't even sure will pay out
+in the end is a bad thing, I think I will try to avoid it.
 
-Apart from that, there is not much that can be really
-improved for the performance. That is simply because
+Apart from that, there is not much that can be
+improved performance-wise. That is simply because
 the legal move generation is just so insanely slow.
 For mid game boards it can take a whole millisecond
-and the only way to increase the performance there
+and the only way to increase the performance
 would be to completely restructure the backend in C.
 That is obviously not going to happen.
-So instead I would focus my attention on making the
+So instead I will focus my attention on making the
 AI stronger by implementing better and more AI
 techniques.
 
 ## Final remarks
 
+This milestone was pretty successful overall.
+While some things didn't work out, a lot of others did.
+I was also able to learn from all of it.
+Though I hope the workload will be more balanced
+in the next milestone,
+[see commit history](https://github.com/PraxTube/chess-ai/commits/master).
