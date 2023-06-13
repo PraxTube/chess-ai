@@ -6,6 +6,7 @@ from tqdm import tqdm
 
 import chess_ai.chess_engine as chess
 from chess_ai.evaluate import evaluate_board
+from chess_ai.evaluate import soft_evaluate_board
 from chess_ai.evaluate import INF
 
 
@@ -18,7 +19,7 @@ def next_move(depth: int, board: chess.Board, debug_info) -> chess.Move:
 
 def get_ordered_moves(board: chess.Board) -> List[chess.Move]:
     def orderer(move):
-        return evaluate_board(board, move)
+        return soft_evaluate_board(board, move)
 
     ordered_moves = list(
         sorted(board.legal_moves(), key=orderer, reverse=(board.white_to_move))
@@ -61,7 +62,8 @@ def alpha_beta_root(depth: int, board: chess.Board, debug_info) -> chess.Move:
 
 def alpha_beta(depth: int, board: chess.Board, debug_info) -> int:
     if board.checkmate or board.stalemate:
-        return evaluate_board(board) + depth
+        offset = -depth if board.white_to_move else depth
+        return evaluate_board(board) + offset
 
     if board.white_to_move:
         return alpha_beta_max(-INF, INF, depth, board, debug_info)

@@ -2,6 +2,7 @@ import os
 
 import chess_ai.chess_engine as chess
 from chess_ai.evaluate import evaluate_board
+from chess_ai.evaluate import soft_evaluate_board
 from chess_ai.evaluate import INF
 
 
@@ -105,10 +106,12 @@ def test_stalemate_evaluation():
     stalemate_board = chess.Board("1k6/1P6/1K6/8/8/8/8/8 b - - 0 1")
     assert stalemate_board.stalemate
     assert -50 > evaluate_board(stalemate_board)
+    assert -50 > soft_evaluate_board(stalemate_board)
 
     stalemate_board = chess.Board("8/8/8/5k2/5p2/5K2/r7/8 w - - 0 1")
     assert stalemate_board.stalemate
     assert 50 < evaluate_board(stalemate_board)
+    assert 50 < soft_evaluate_board(stalemate_board)
 
 
 def test_king_of_the_hill_evaluation():
@@ -136,3 +139,6 @@ def test_king_of_the_hill_evaluation():
     mate_in_one_board.make_move(mate_move)
     assert mate_in_one_board.checkmate
     assert INF == evaluate_board(mate_in_one_board)
+
+
+
