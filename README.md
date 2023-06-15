@@ -10,7 +10,7 @@ Set up the project locally.
 
 ### Prerequisites
 
-You will need `pyhton3` and `git`. I would recommend `pyhton3.10` but others should work
+You will need `python3` and `git`. I would recommend `python3.10` but others should work
 too.
 
 ### Install
@@ -30,7 +30,7 @@ pip install -e .
 if everything went well, you should be able to run the project with
 
 ```
-pyhton src/chess_ai/main.py
+python src/chess_ai/main.py
 ```
 
 ## Contributing
@@ -86,8 +86,8 @@ Note that your branch will **only** be tested if you have an open **pull request
 
 The deadline for this is the **18th Mai**.
 
-- [ ] Alpha-beta search
-- [ ] Sophisticated evaluation function
-- [ ] Unit tests for legal moves
-- [ ] Unit tests for chess engine
-- [ ] Benchmarks that test different depths
+- [x] Alpha-beta search
+- [x] ~~Sophisticated~~ Better evaluation function
+- [x] Unit tests for legal moves
+- [x] ~~Unit tests for chess engine~~
+- [x] Benchmarks that test different depths
