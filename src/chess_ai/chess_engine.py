@@ -4,7 +4,7 @@ class GameState:
             self.setup_default_board()
         else:
             self.setup_fen_board(fen_board)
-
+    #what should be returned when the class object is returned as string
     def __str__(self):
         result = ""
         for rank in self.board:
@@ -80,7 +80,7 @@ class GameState:
                     c = "p" if square == "P" else square.upper()
                     rank[i] = "w" + c
         return board
-
+    # this is a object method 
     def setup_default_board(self):
         self.board = [
             ["bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"],
