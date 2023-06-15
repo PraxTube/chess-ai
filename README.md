@@ -1,8 +1,9 @@
 # Chess AI
 
-Basic chess ai that uses minimax to search for the best move to make.
-Given that it's written in python, the depth is very shallow
-(currently max depth is 3).
+Basic chess ai that uses alpha-beta to search for the best move
+on a given board.
+The max depth is 3, any deeper and the AI will take way to long
+to compute the best move.
 
 ## Getting started
 
@@ -81,13 +82,3 @@ if any of these fail, then you will not be able to merge your PR into master.
 You should check if your commit passed the tests.
 
 Note that your branch will **only** be tested if you have an open **pull request** into master.
-
-## Milestone II - Basic AI
-
-The deadline for this is the **18th Mai**.
-
-- [x] Alpha-beta search
-- [x] ~~Sophisticated~~ Better evaluation function
-- [x] Unit tests for legal moves
-- [x] ~~Unit tests for chess engine~~
-- [x] Benchmarks that test different depths
