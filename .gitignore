@@ -164,3 +164,4 @@ cython_debug/
 logs/
 benchmarks.csv
 benchmarks.tex
+plot*.pdf
