@@ -8,7 +8,7 @@ import numpy as np
 # we have a materialist view
 
 # store the pesto model weights for the different 
-# mg stands for MIDGAME , eg stands for EDNGAME
+# mg stands for MIDGAME , eg stands for ENDGAME
 mg_pawn_table = [
     0, 0, 0, 0, 0, 0, 0, 0,
     98, 134, 61, 95, 68, 126, 34, -11,
