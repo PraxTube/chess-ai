@@ -120,3 +120,74 @@ def test_bonus_Rook_covered_rook():
     board = chess.Board(fen_board="brnqknrb/8/8/8/1P3pP1/2P5/R6R/1BNQKNB1 b - - 0 1")
 
     assert(test.bonus_Rook_covered_rook(board, True) == 30)
+
+def test_bishop_mobility():
+    board = chess.Board(fen_board="rnbqkbnr/ppp1pppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    assert(test.bishop_mobility(board, False) == -6 )
+    assert(test.bishop_mobility(board, True) == 0 )
+
+def test_rook_mobility():
+
+    board = chess.Board(fen_board="r2qkbnr/1pp1pppp/2n5/p2p1b2/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    assert(test.rook_moobility(board, False) == -6)
+    assert(test.rook_moobility(board, True) == 0)
+
+def test_trapped_bishops():
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/2P1P1P1/5P2/PP1P2BP/RNBQK1NR b KQkq - 0 1")
+
+    assert(test.trapped_bishops(board, True)  == 20)
+    assert(test.trapped_bishops(board, False)  == 0)
+
+    board = chess.Board(fen_board="rnbqkbnr/pp4pp/2p1p3/3pPp2/2PP1PP1/8/PP4BP/RNBQK1NR w KQkq - 0 1")
+
+    assert(test.trapped_bishops(board, True)  == 20)
+    assert(test.trapped_bishops(board, False)  == -20)
+
+def test_punish_isolated_pawns():
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/3P2P1/8/PP6/RNBQKBNR b KQkq g3 0 1")
+
+    assert(test.punish_isolated_pawns(board, True) == -40)
+
+    assert(test.punish_isolated_pawns(board, False) == 0)
+
+    board = chess.Board(fen_board="rnbqkbnr/4p1pp/8/p2p1p2/3P2P1/8/PP6/RNBQKBNR w KQkq a6 0 1")
+
+    assert(test.punish_isolated_pawns(board, False) == 20)
+
+def test_punish_backwards_pawns():
+    
+    board = chess.Board(fen_board="r1bqkbnr/pppppppp/2n5/8/8/3P4/PPP1PPPP/RNBQKBNR b KQkq - 0 1")
+
+    assert(5 == 5)
+
+def test_evaluate_king_shelter():
+
+    board = chess.Board(fen_board="r1bqkbnr/ppp3pp/2n5/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1")
+
+    assert(test.evaluate_king_shelter(board, True) == -20)
+    assert(test.evaluate_king_shelter(board, False) == 60)
+
+def test_evaluate_king_danger():
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    assert(test.evaluate_king_danger(board, True) == 0)
+    assert(test.evaluate_king_danger(board, False) == 0)
+
+
+def test_material_evaluation():
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+
+    assert(test.material_evaluation(board, True) == 0)
+    assert(test.material_evaluation(board, False) == 0)
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1")
+
+    assert(test.material_evaluation(board, True) == -40)
+    assert(test.material_evaluation(board, False) == -40)
+
