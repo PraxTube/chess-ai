@@ -1,8 +1,12 @@
-import random
+import chess_engine as chess
+row, col = 7,4 
+contact_squares = []
 
-# Generate a random integer between a given range
-start_range = -30
-end_range = 30
-random_number = random.randint(start_range, end_range)
+board = chess.Board().board
 
-print(random_number)
+for i in range(row - 1, row + 2):
+    for j in range(col - 1, col + 2):
+        if 0 <= i < 8 and 0 <= j < 8 and (i, j) != (row, col):
+            contact_squares.append((i, j))
+
+print(contact_squares)

@@ -5,15 +5,27 @@ import operator
 
 # TODO: board = board.board für  alles funktionen umändern!
 
-# TODO : Dokumentation schreiben mit quellen drin
-
 # TODO : backward pawn implementation and test
 
 # TODO : GamePhase Interpolation
 
+# TODO Orchestrierung des ganzes
+
 
 # implementation after fruit -> uses the contact squares 
-# different number of attacker have different weightings 
+# we only use one score for every attacker
+def get_king_contact_squares(row, col):
+    
+    contact_squares = []
+
+    for i in range(row - 1, row + 2):
+        for j in range(col - 1, col + 2):
+            if 0 <= i < 8 and 0 <= j < 8 and (i, j) != (row, col):
+                contact_squares.append((i, j))
+
+    return contact_squares
+
+
 def evaluate_king_danger(board, white_to_move):
 
     if white_to_move:
@@ -21,19 +33,18 @@ def evaluate_king_danger(board, white_to_move):
     else:
         king_piece = -6
     
-    moves = []
     try:
         king_pos = board.find_piece(king_piece)
     except:
         print("Where's the king?")
 
-    board.king_moves(king_pos[0], king_pos[1], moves)
+    moves = get_king_contact_squares(king_pos[0], king_pos[1])
 
     # für alle end - squares , schaun ob es im check ist
 
     attack_count = 0
     for move in moves:
-        if board.square_under_attack(move.end_row, move.end_col) == True:
+        if board.square_under_attack(move[0], move[1]) == True:
             attack_count += 1
         else:
             continue
@@ -185,42 +196,38 @@ def punish_backward_pawns(board, white_to_move):
     if white_to_move:
         pawn_piece = 1
         dir_step = -1
-        max_row = 8
+      
     else:
         pawn_piece = -1
         dir_step = 1
-        max_row = 0
-    
-    # we do not look at the outside squares
-    rows = range(1,7)
-    cols = range(1,7)
+       
+    # find the rank with the last pawn on the side
 
-    back_ward_pawn_count = 0
-    
-    for row in rows:
-        for col in cols:
+    game_board = board.board
 
-            if board[row][col] == pawn_piece:
-                # check if there if one step further would be under attack
-                if board.square_under_attack(board[row + dir_step] [col]):
-                    # check if there are adjacent pawns that that can support you
-                    if board[row][col +1] == pawn_piece or board[row][col-1] == pawn_piece:
-                        continue
-                    else:
-                        back_ward_pawn_count +=1
-                else:
-                    continue
-            else:
-                continue
-        
+    pawn_rows = []
+
+    for row in range(len(game_board)):
+        if pawn_piece in game_board[row]:
+            pawn_rows.append(row)
+
+    if white_to_move:
+        result_row = max(pawn_rows)
+    else: result_row = min(pawn_rows)
+
+    back_ward_pawn_count= 0
+
+    # check backward pawn conditions, they cannot have support from other files
+    for col in range(len(game_board)):
+        if game_board[result_row][col] == pawn_piece  and  board.square_under_attack(row + dir_step ,col):
+            back_ward_pawn_count +=1
+        else:
+            continue
+             
     if white_to_move:
         return back_ward_pawn_count * -20
     else:
         return back_ward_pawn_count *20
-
-
-
-
 
 
 
@@ -295,8 +302,7 @@ def rooks_on_seventh_rank(board, white_to_move):
     else:
         return -score_to_return
 
-
-#TODO hier die funktion umschreiben   
+ 
 
 def bishop_mobility(board, white_to_move):
 
@@ -307,19 +313,17 @@ def bishop_mobility(board, white_to_move):
 
     positions = []
 
-    try:
+    game_board = board.board
 
-        positions.append(board.find_piece(piece))   # weiß nicht, ob das soa uh klappt 
-        positions.append(board.find_piece(piece))
-
-    except ValueError:
-
-        print("Gibt anscheinend nur noch einen")
+    for row in range(len(game_board)):
+        for col in range(len(game_board[row])):
+            if game_board[row][col] == piece:
+                positions.append((row, col))
 
 
     moves = []
     for pos in positions:
-        board.bishop_moves(pos[0], pos[0], moves)
+        board.bishop_moves(pos[0], pos[1], moves)
     
     score_to_return = len(moves) *3  #linear evaluation
 
@@ -329,7 +333,7 @@ def bishop_mobility(board, white_to_move):
         return - score_to_return
 
 # erweitertes zentrum 4x 4 felder in der mitte
-# bstraft wenn > 2 eigene bauern auf dem jeweiligen feld des läufers stehen
+# bstraft wenn > 2 gegnerische bauern auf dem jeweiligen feld des läufers stehen
 # summe der indizes gerade -> weißes feld, ungerade -> schwarzes feld
 # pro trapped bishop, wird so viel bestraft: 20
 def trapped_bishops(board, white_to_move):
@@ -342,10 +346,10 @@ def trapped_bishops(board, white_to_move):
 
     if white_to_move:
         piece = 3
-        pawn_piece = 1
+        pawn_piece = -1
     else :
         piece = -3
-        pawn_piece = -1
+        pawn_piece =1
     
     pawn_piece_count_black_square = 0
     pawn_piece_count_white_square = 0
@@ -367,17 +371,17 @@ def trapped_bishops(board, white_to_move):
                 pass
     
     
-    if black_square_bishop == 1 and pawn_piece_count_black_square > 2 :
+    if black_square_bishop == 1 and pawn_piece_count_black_square >= 2 :
         score_to_return += 20
-    elif white_sqare_bishop == 1 and pawn_piece_count_white_square > 2 :
+    elif white_sqare_bishop == 1 and pawn_piece_count_white_square >= 2 :
         score_to_return += 20
     else:
         pass
 
     if white_to_move:
-        return score_to_return
+        return -score_to_return
     else:
-        return - score_to_return
+        return  score_to_return
 
 
 
@@ -410,10 +414,6 @@ def rook_moobility(board, white_to_move):
     else:
         return - score_to_return
 
-
-
-# weiß wird miximiert
-# schwaz wird minimiert
 # bestrafung für einen läufer in anfangsposition 
 def punish_bishop_on_SP(board, white_to_move):
 

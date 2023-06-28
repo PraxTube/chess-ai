@@ -124,7 +124,7 @@ def test_bonus_Rook_covered_rook():
 def test_bishop_mobility():
     board = chess.Board(fen_board="rnbqkbnr/ppp1pppp/8/3p4/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
 
-    assert(test.bishop_mobility(board, False) == -6 )
+    assert(test.bishop_mobility(board, False) == -24 )
     assert(test.bishop_mobility(board, True) == 0 )
 
 def test_rook_mobility():
@@ -138,13 +138,13 @@ def test_trapped_bishops():
 
     board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/2P1P1P1/5P2/PP1P2BP/RNBQK1NR b KQkq - 0 1")
 
-    assert(test.trapped_bishops(board, True)  == 20)
-    assert(test.trapped_bishops(board, False)  == 0)
+    assert(test.trapped_bishops(board, True)  == 0)
+    assert(test.trapped_bishops(board, False)  == 20)
 
     board = chess.Board(fen_board="rnbqkbnr/pp4pp/2p1p3/3pPp2/2PP1PP1/8/PP4BP/RNBQK1NR w KQkq - 0 1")
 
-    assert(test.trapped_bishops(board, True)  == 20)
-    assert(test.trapped_bishops(board, False)  == -20)
+    assert(test.trapped_bishops(board, True)  == -20)
+    assert(test.trapped_bishops(board, False)  == 20)
 
 def test_punish_isolated_pawns():
 
@@ -190,4 +190,12 @@ def test_material_evaluation():
 
     assert(test.material_evaluation(board, True) == -40)
     assert(test.material_evaluation(board, False) == -40)
+
+def test_backward_pawns():
+
+    board = chess.Board()
+
+    assert(test.punish_backward_pawns(board, True) == 0)
+
+
 
