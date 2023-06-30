@@ -160,6 +160,8 @@ mg_piece_values = np.array(
 )
 eg_piece_values = np.array([94, 281, 297, 512, 936, 9999])
 
+# das ist ein array, das aus 2d arrays besteht
+# mit fliupUD wird eine
 mg_total_table = np.stack(
     (
         mg_pawn_table,
@@ -206,7 +208,7 @@ def evaluate_board(board, move=None):
         raise ValueError(
             "The board was not properly cleaned up!", start_B, board.to_np()
         )
-
+    # 
     if checkmate:
         return -INF if white_to_move else INF
 
