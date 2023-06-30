@@ -1,12 +1,9 @@
+from evaluate import evaluate_board
 import chess_engine as chess
-row, col = 7,4 
-contact_squares = []
 
-board = chess.Board().board
+board = chess.Board(fen_board="8/1n1PB1p1/R2P1q2/p2P3P/1PN1P2k/2R5/N1p2r1P/1b4K1 w - - 0 1")
 
-for i in range(row - 1, row + 2):
-    for j in range(col - 1, col + 2):
-        if 0 <= i < 8 and 0 <= j < 8 and (i, j) != (row, col):
-            contact_squares.append((i, j))
+a = evaluate_board(board)
 
-print(contact_squares)
+print(a)
+

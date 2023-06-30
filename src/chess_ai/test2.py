@@ -11,6 +11,8 @@ import operator
 
 # TODO Orchestrierung des ganzes
 
+#TODO piece-squre tables anpassen und figuren values umändern
+
 
 # implementation after fruit -> uses the contact squares 
 # we only use one score for every attacker
