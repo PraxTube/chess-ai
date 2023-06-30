@@ -197,5 +197,20 @@ def test_backward_pawns():
 
     assert(test.punish_backward_pawns(board, True) == 0)
 
+def test_count_pawns():
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/8/8/PPP4P/RNB1KBNR w KQkq - 0 1")
 
+    assert(test.count_pawns(board.board, True) == 4)
+    assert(test.count_pawns(board.board, False) == 8)
+
+
+def test_game_interpolation():
+
+    board = chess.Board(fen_board="rnbqkbnr/pppppppp/8/8/8/8/PPP4P/RNB1KBNR w KQkq - 0 1")
+
+    assert(test.game_interpolation_is_endgame(board, True)== True)
+
+    board = chess.Board(fen_board="6b1/2Kp4/5pP1/1N3P2/2kP1R1B/npp2r2/P3P1p1/RB5N w - - 0 1")
+
+    assert(test.game_interpolation_is_endgame(board, True)== True)
 

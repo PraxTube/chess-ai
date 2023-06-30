@@ -1,17 +1,52 @@
 import random
 import numpy as np
-import  chess_engine as chess
+import  chess_ai.chess_engine as chess
 import operator
 
 # TODO: board = board.board für  alles funktionen umändern!
 
-# TODO : backward pawn implementation and test
 
-# TODO : GamePhase Interpolation
 
 # TODO Orchestrierung des ganzes
 
-#TODO piece-squre tables anpassen und figuren values umändern
+#TODO piece-squre tables anpassen und figuren values umändern??
+
+def count_pawns (game_board, white_to_move):
+    if white_to_move:
+        pawn_piece = 1
+    else:
+        pawn_piece = -1
+    
+    pawn_count = 0
+    for row in range(len(game_board)):
+        for col in range(len(game_board[row])):
+            if game_board[row][col] == pawn_piece:
+                pawn_count +=1
+
+    return pawn_count
+def game_interpolation_is_endgame(board, white_to_move):
+
+    game_board = board.board
+
+    queen_missing = False
+
+    dangerous_positions = [(2,2), (2,3), (2,4), (2,5), (3,2), (4,2), (5,2), (5,3), (5,4), (5,5), (3,5), (4,5)]
+    central_king_location = False
+
+    if board.white_king_location in dangerous_positions or board.black_king_location in dangerous_positions:
+        central_king_location = True
+
+    try:
+        a = board.find_piece(5)
+        b = board.find_piece(-5)
+    except ValueError:
+        queen_missing = True
+
+    if (count_pawns(game_board, True) <= 4 or count_pawns(game_board, False) and queen_missing) or central_king_location:
+        return True
+    else :
+        return False
+
 
 
 # implementation after fruit -> uses the contact squares 
@@ -729,9 +764,12 @@ def evaluate_pawn_features(board, white_to_move):
     score = 0
     score += pawn_promotion_poss(board, white_to_move)
     score += punish_pawns_same_line(board, white_to_move)
-    score += evaluate_pawn_features(board, white_to_move)
     score += bonus_pawns_in_centre(board, white_to_move)
     score += punish_for_pawns_not_right_aligned(board, white_to_move)
+    score += bonus_paws_neighbor_lines(board, white_to_move)
+    score += punish_isolated_pawns(board, white_to_move)
+    score += punish_backward_pawns(board, white_to_move)
+
 
     return score
 
@@ -740,6 +778,8 @@ def evaluate_bishop_features(board, white_to_move):
     score = 0
     score += punish_bishop_on_SP(board, white_to_move)
     score += bonus_both_bishops(board, white_to_move)
+    score += bishop_mobility(board, white_to_move)
+    score += trapped_bishops(board,white_to_move)
 
 def evaluate_rook_features(board, white_to_move):
     
@@ -747,6 +787,14 @@ def evaluate_rook_features(board, white_to_move):
     score += bonus_Rook_covered_rook(board, white_to_move)
     score += bonus_for_Rook_halfopen_lines(board , white_to_move)
     score += bonus_for_Rook_open_lines(board, white_to_move)
+    score += rook_moobility(board, white_to_move)
+    score += rooks_on_seventh_rank(board, white_to_move)
+
+def evaluate_king_features(board, white_to_move):
+    score = 0
+    score += evaluate_king_danger(board, white_to_move)
+    score += evaluate_king_shelter(board, white_to_move)
+
 
         
         
@@ -764,5 +812,9 @@ def evaluate_board(board, white_to_move, move=None):
     score_to_return += evaluate_pawn_features(board, white_to_move)
     score_to_return += evaluate_rook_features(board, white_to_move)
     score_to_return += evaluate_bishop_features(board, white_to_move)
+    score_to_return += evaluate_king_features(board, white_to_move)
+    score_to_return += material_evaluation(board, white_to_move)
+    score_to_return += queen_on_seventh_rank(board, white_to_move)
+    score_to_return += add_randomness()
 
     return score_to_return
