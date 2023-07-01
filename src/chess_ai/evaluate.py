@@ -1,4 +1,5 @@
 import numpy as np
+import test2 as eval
 
 
 INF = 99999
@@ -63,7 +64,7 @@ mg_bishop_table = np.array(
         [-19, -7, -37, -26, -36, -14, 2, -22],
     ]
 )
-eg_bishop_tabe = np.array(
+eg_bishop_table = np.array(
     [
         [-14, -21, -11, -8, -7, -9, -17, -24],
         [-8, -4, 7, -12, -3, -13, -4, -14],
@@ -160,8 +161,7 @@ mg_piece_values = np.array(
 )
 eg_piece_values = np.array([94, 281, 297, 512, 936, 9999])
 
-# das ist ein array, das aus 2d arrays besteht
-# mit fliupUD wird eine
+
 mg_total_table = np.stack(
     (
         mg_pawn_table,
@@ -178,6 +178,24 @@ mg_total_table = np.stack(
         np.flipud(mg_king_table) * -1,
     )
 )
+
+eg_total_table = np.stack(
+    (
+        eg_pawn_table,
+        eg_knight_table,
+        eg_bishop_table,
+        eg_rook_table,
+        eg_queen_table,
+        eg_king_table,
+        np.flipud(eg_pawn_table) * -1,
+        np.flipud(eg_knight_table) * -1,
+        np.flipud(eg_bishop_table) * -1,
+        np.flipud(eg_rook_table) * -1,
+        np.flipud(eg_queen_table) * -1,
+        np.flipud(eg_king_table) * -1,
+    )
+)
+
 mg_piece_values_table = np.vstack(
     (
         np.tile(mg_piece_values[:, np.newaxis], (1, 64)).reshape(6, 8, 8),
@@ -185,8 +203,40 @@ mg_piece_values_table = np.vstack(
     )
 )
 
+
+eg_piece_values_table = np.vstack(
+    (
+        np.tile(eg_piece_values[:, np.newaxis], (1, 64)).reshape(6, 8, 8),
+        np.tile(eg_piece_values[:, np.newaxis], (1, 64)).reshape(6, 8, 8) * -1,
+    )
+)
+
 piece_values = [1, 2, 3, 4, 5, 6, -1, -2, -3, -4, -5, -6]
 
+def piece_square_evaluation(B, is_endgame= False):
+    
+
+    if is_endgame:
+
+        B_reshaped = B.reshape((1, 8, 8))
+        mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
+
+        eval_sum = np.sum(eg_total_table[mask])
+        eval_sum += np.sum(eg_piece_values_table[mask])
+
+
+    else:
+
+        B_reshaped = B.reshape((1, 8, 8))
+        mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
+
+        eval_sum = np.sum(mg_total_table[mask])
+        eval_sum += np.sum(mg_piece_values_table[mask])
+
+    
+    return eval_sum
+
+    
 
 def evaluate_board(board, move=None):
     start_B = board.to_np()
@@ -211,13 +261,14 @@ def evaluate_board(board, move=None):
     # 
     if checkmate:
         return -INF if white_to_move else INF
+    
+    if eval.game_interpolation_is_endgame(board, white_to_move):
+        score = piece_square_evaluation(B, True )
+    else:
+        score = piece_square_evaluation(B)
 
-    B_reshaped = B.reshape((1, 8, 8))
-    mask = B_reshaped == np.array(piece_values)[:, np.newaxis, np.newaxis]
-
-    eval_sum = np.sum(mg_total_table[mask])
-    eval_sum += np.sum(mg_piece_values_table[mask])
+    score += eval.eval_func(board, white_to_move)
 
     if stalemate:
-        return -eval_sum
-    return eval_sum
+        return -score
+    return score

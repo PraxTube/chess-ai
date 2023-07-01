@@ -2,7 +2,7 @@ import random
 import chess
 import  chess_engine as engine
 import time
-import test2 as eval
+import evaluate as eval
 
 fen_strings = []
 
@@ -20,10 +20,9 @@ for _ in range(100):
 
 # ------------- Board evaluation performance test ----------------
 
-test2_runtimes = []
 evaluate_runtimes = []
 
-test2_scores = []
+
 evaluate_scores = []
 
 
@@ -33,11 +32,17 @@ for x in fen_strings:
 
     start_time = time.time()
 
-    score = eval.evaluate_board(board, board.white_to_move)
+    score = eval.evaluate_board(board)
 
     end_time = time.time()
 
-    test2_runtimes.append(end_time)
-    test2_scores.append(score)
+    evaluate_runtimes.append(end_time)
+    evaluate_scores.append(score)
 
-print("The average Runtime of the function is: " + sum(test2_runtimes) / len(test2_runtimes))
+
+
+print("The average Runtime of the piece function is: " + str(sum(evaluate_runtimes) / len(evaluate_runtimes)))
+
+print("The average score of the piece  function is: " + str(sum(evaluate_scores) / len(evaluate_scores)))
+
+print(evaluate_scores)

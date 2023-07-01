@@ -1,6 +1,6 @@
 import random
 import numpy as np
-import  chess_ai.chess_engine as chess
+import  chess_engine as chess
 import operator
 
 # TODO: board = board.board für  alles funktionen umändern!
@@ -176,7 +176,7 @@ def evaluate_king_shelter(board, white_to_move):
     tboard = np.array(board.board).T.tolist()
 
     my_list = range(king_pos[1] -1, king_pos[1] +2 )
-    print(king_pos[1], "-----", str(my_list))
+    
     
     count = 0
     for line in my_list:
@@ -206,7 +206,7 @@ def punish_isolated_pawns(board, white_to_move):
     alpha= 1
 
     tboard =  np.array(board.board).T.tolist()
-    print(tboard)
+    
 
     count = 0
 
@@ -453,20 +453,20 @@ def rook_moobility(board, white_to_move):
 
 # bestrafung für einen läufer in anfangsposition 
 def punish_bishop_on_SP(board, white_to_move):
-
+    game_board = board.board
     score = 0
     if white_to_move:
-        if board[7][2] == 3 :
+        if game_board[7][2] == 3 :
             score -=15
-        if board[7][5] == 3:
+        if game_board[7][5] == 3:
             score -= 15
         return score
         
     else:
-        if board[0][2] == -3 :
+        if game_board[0][2] == -3 :
             score +=15
             
-        if board[0][5] == -3:
+        if game_board[0][5] == -3:
             score += 15
     
         return score
@@ -481,10 +481,11 @@ def bonus_both_bishops(board,  white_to_move):
         piece = 3
     else:
         piece = -3
-
-    for x in range(len(board)):
-        for i in range(len(board[x])):
-            if board[x][i] == piece:
+    
+    game_board = board.board
+    for x in range(len(game_board)):
+        for i in range(len(game_board[x])):
+            if game_board[x][i] == piece:
                 count += 1
 
     if white_to_move and count ==2: return  20 
@@ -504,29 +505,30 @@ def punish_for_pawns_not_right_aligned(board, white_to_move):
         range_test = [1,2]
         alpha = 1
 
+    game_board = board.board
     score = 0
     for row in range_test:
-        for col in range(len(board[row])):
-            a = board[row][col]
+        for col in range(len(game_board[row])):
+            a = game_board[row][col]
             if a == 0 : pass
             else:
                 if col == 0 :
                     
-                    if board[row][col] == piece and board[row + alpha][col+1] == piece:
+                    if game_board[row][col] == piece and game_board[row + alpha][col+1] == piece:
                         pass
                     else:
                         score += 15
                 
                 elif col == 7:
 
-                    if board[row][col] == piece and board[row + alpha][col-1] == piece:
+                    if game_board[row][col] == piece and game_board[row + alpha][col-1] == piece:
                         pass
                     else:
                         score += 15
 
                 else:
 
-                    if board[row][col] == piece and (board[row + alpha][col-1] == piece or board[row + alpha][col+1] == piece):
+                    if game_board[row][col] == piece and (game_board[row + alpha][col-1] == piece or game_board[row + alpha][col+1] == piece):
                         pass
                     else:
                         score +=15
@@ -552,9 +554,10 @@ def pawn_promotion_poss(board, white_to_move):
         row = 6
         alpha = 1
     
+    game_board = board.board
     count = 0
-    for col in range(len(board[row])):
-        if board[row][col] == piece and board[row+alpha][col] == 0 :
+    for col in range(len(game_board[row])):
+        if game_board[row][col] == piece and game_board[row+alpha][col] == 0 :
             count += 1
     
     if white_to_move:
@@ -574,7 +577,9 @@ def pawn_promotion_poss(board, white_to_move):
 # bonus für einen bauern, der das Zentrum des schachbretts erreicht hat
 def bonus_pawns_in_centre(board, white_to_move):
 # slice the centre of the map , die mittleren 16 felder
-    centre = [board[x][2:6] for x in range(2,6)]
+
+    game_board = board.board
+    centre = [game_board[x][2:6] for x in range(2,6)]
     if white_to_move:
         piece = 1
     else :
@@ -599,7 +604,7 @@ def punish_pawns_same_line(board, white_to_move):
     else :
         piece = -1
     
-    new_board = np.array(board)
+    new_board = np.array(board.board)
     tboard = new_board.transpose()
 
     x = 0
@@ -621,7 +626,7 @@ def punish_pawns_same_line(board, white_to_move):
 # hier auch auf die äußeren linien achten
 def bonus_paws_neighbor_lines(board, white_to_move):
     
-    new_board = np.array(board)
+    new_board = np.array(board.board)
     tboard = new_board.transpose()
     score = 0
     if white_to_move:
@@ -673,7 +678,7 @@ def bonus_for_Rook_halfopen_lines(board, white_to_move):
     white_pawn = 1
     black_pawn = -1
     score_to_return = 0
-    new_board = np.array(board)
+    new_board = np.array(board.board)
     tboard = new_board.transpose()
     for i in range(len(tboard)):
         wcount = 0
@@ -705,7 +710,7 @@ def bonus_for_Rook_open_lines(board, white_to_move):
     black_pawn = -1
     score_to_return = 0
 
-    new_board = np.array(board)
+    new_board = np.array(board.board)
     tboard = new_board.transpose()
     for i in range(len(tboard)):
         wcount = 0
@@ -769,6 +774,7 @@ def evaluate_pawn_features(board, white_to_move):
     score += bonus_paws_neighbor_lines(board, white_to_move)
     score += punish_isolated_pawns(board, white_to_move)
     score += punish_backward_pawns(board, white_to_move)
+    return score
 
 
     return score
@@ -781,6 +787,8 @@ def evaluate_bishop_features(board, white_to_move):
     score += bishop_mobility(board, white_to_move)
     score += trapped_bishops(board,white_to_move)
 
+    return score
+
 def evaluate_rook_features(board, white_to_move):
     
     score = 0
@@ -790,25 +798,21 @@ def evaluate_rook_features(board, white_to_move):
     score += rook_moobility(board, white_to_move)
     score += rooks_on_seventh_rank(board, white_to_move)
 
+    return score
+
 def evaluate_king_features(board, white_to_move):
     score = 0
     score += evaluate_king_danger(board, white_to_move)
     score += evaluate_king_shelter(board, white_to_move)
+    return score
 
 
         
         
 
-def evaluate_board(board, white_to_move, move=None):
+def eval_func(board, white_to_move, move=None):
     
     score_to_return = 0
-    if move:
-        board.makeMove(move)
-        fen_string = board.fen().split()[0]
-        board.undoMove()
-    else:
-        fen_string = board.fen().split()[0]
-
     score_to_return += evaluate_pawn_features(board, white_to_move)
     score_to_return += evaluate_rook_features(board, white_to_move)
     score_to_return += evaluate_bishop_features(board, white_to_move)
