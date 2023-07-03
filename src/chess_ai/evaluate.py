@@ -1,5 +1,5 @@
 import numpy as np
-import test2 as eval
+import evaluation_features as eval
 
 
 INF = 99999

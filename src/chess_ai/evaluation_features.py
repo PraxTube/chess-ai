@@ -1,15 +1,8 @@
 import random
 import numpy as np
-import  chess_engine as chess
 import operator
 
-# TODO: board = board.board für  alles funktionen umändern!
 
-
-
-# TODO Orchestrierung des ganzes
-
-#TODO piece-squre tables anpassen und figuren values umändern??
 
 def count_pawns (game_board, white_to_move):
     if white_to_move:
@@ -24,6 +17,8 @@ def count_pawns (game_board, white_to_move):
                 pawn_count +=1
 
     return pawn_count
+
+
 def game_interpolation_is_endgame(board, white_to_move):
 
     game_board = board.board
@@ -77,7 +72,7 @@ def evaluate_king_danger(board, white_to_move):
 
     moves = get_king_contact_squares(king_pos[0], king_pos[1])
 
-    # für alle end - squares , schaun ob es im check ist
+    # für alle end - squares , schaun ob es under attack ist
 
     attack_count = 0
     for move in moves:
@@ -156,7 +151,7 @@ def material_evaluation(board, white_to_move):
     
 # https://www.chessprogramming.org/King_Safety#Square_Control
 # gonna implement pawn shield 
-# not gonna implement it for castling, since we think its so relevant for king of the hills
+# not gonna implement it for castling, since we think its not so relevant for king of the hills
 # pawn shield: abzug wenn auf den drei linien vor dem könig, keine bauner sind
 def evaluate_king_shelter(board, white_to_move):
     if white_to_move:
@@ -193,15 +188,12 @@ def evaluate_king_shelter(board, white_to_move):
         
 
 # punish pawns : In chess, an isolated pawn is a pawn that has no friendly pawn on an adjacent file
-# function punish_pawns_not right_aligned is something similar
 def punish_isolated_pawns(board, white_to_move):
 
     if white_to_move:
         pawn_piece = 1
-        enemy_piece = -1
     else:
         pawn_piece = -1
-        enemy_piece = 1
     
     alpha= 1
 
