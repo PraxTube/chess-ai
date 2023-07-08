@@ -6,16 +6,18 @@ A chess AI written in Python.
 
 ## Summary
 
-In this milestone we primairly focused on the AI and to improve
-the AI's strength and speed.
+In this milestone we primairly focused on the AI improvements
+in both strength and speed.
 
-## AI
+We managed to make the AI both stronger and faster by implementing
+the following changes:
 
-We implemented the following AI features:
-
+- Various evaluation function improvements
 - PVS/negamax
 - Nullsearch
 - MCTS
+
+## AI
 
 ### Evaluation
 
@@ -31,16 +33,14 @@ that it was a good trade-off for a stronger AI.
 Fine tuning a few hyperparameters (through research and
 trial and error) also helped to increase the strength without any trade-offs.
 We also tried to implement mobility evaluation, however in our case
-it was just way too slow so we removed it. Also checking if two bishops
-are present was too slow.
+it was just way too slow so we removed it. Also, checking if two bishops
+are present was too slow (compared to the benefit it provided).
 
-The main reason we were able to implement some features and some not,
+The reason some features worked well and others didn't
 was mainly a question about can we vectorize it properly with numpy.
 Features that required calcuations that could be cleverly put into
-one single numpy call were the best, because with numpy it's essentially
-constant time to call it. On the other, features that only required
-checks were you had to loop through the board were simply to slow
-compared to the rest.
+one single numpy call worked the best. On the other, features that only required
+checks with loops over the board were simply to slow compared to the rest.
 
 ### PVS/Negamax
 
@@ -59,7 +59,17 @@ The challenges we faced with the MCTS implementation were mainly related to the 
 
 ## Benchmarks
 
-TODO CONTENT
+The plots illustrate how the changes to the AI effect the performance.
+We can see that only the evaluation and the best move generation are influenced by the changes
+(which makes sense of course, given that we didn't change anything in the backend).
+
+The increase in evaluation is fairly high, however we do get a lot of value out of that trade-off.
+We also exeprimented with worse evaluation and faster speed and also the reverse and ultimately landed
+somewhere inbetween. The best move generation went down overall because of all the different AI
+features we implemented, which is actually a very good sign because the evaluation time increase.
+
+In figure 2 we can see that the amount of nodes we search has decreased and that the overall time
+has also decreased compared to the previous AI version.
 
 The tests were run on a PC with the following specs
 
@@ -85,7 +95,20 @@ The tests were run on a PC with the following specs
 
 ## Lessons learned
 
-
+We were able to implement most of the things we planned to do without any major issues.
+Primairly because we leveraged the knowledge and learned from previous mistakes.
+For instance we didn't commit to anything before we knew it would yield results.
+We tested very regularly the performance to see if we are going in the right direction.
+Atomic commits kept the history clean and allowed for better and easier teamwork.
 
 ## Final remarks
 
+This was the final milestone in which we managed to wrap up the project
+fairly nicely. That being said, there are still a number of possible
+improvements that can be made. Perhaps we will continue this project
+as a hobby at some point, though not in the near future.
+
+At times this project was a lot. Bugs kept creeping up everywhere.
+The teamwork didn't work out to well in the beginning.
+However we managed to overcome these issues and learn from them.
+Overall it has been a very teaching and most importantly a fun project.
