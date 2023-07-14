@@ -1,0 +1,103 @@
+\documentclass[
+pdftex,                %PDFtext verwenden
+a4paper,                 %A4Papier
+11pt,                     %Schriftgröße 12
+parskip=half,         %Halbe Zeile Abstand zwischen den Paragraphen
+headsepline,        %Linie nach Kopfzeile
+]
+{scrartcl}
+
+\usepackage{graphicx}	% Paket um Grafiken einbetten zu können
+\usepackage{color}	% Package für Farben im PDF
+\usepackage{makeidx}	% Paket für die Indexerstellung
+\usepackage[a4paper,left=2.0cm,right=2.0cm]{geometry}	%Paket zum Einstellen der Seitenränder
+\usepackage[T1]{fontenc}	% Verwenden von T1 Fonts
+\usepackage[urlcolor=blue]{hyperref}
+\usepackage{caption}	% Caption verändern
+\usepackage{verbatim}
+\usepackage{booktabs}
+
+%\setcapwidth[r]{\linewidth}
+
+\begin{document}
+	
+	\newcommand{\group}{Group C - The Plebs}
+	
+	\newcommand{\header}{Python Chess AI}
+
+	\pagestyle{myheadings}
+	\markright{\group \hfill \header}
+	
+	\thispagestyle{empty}
+	\begin{titlepage}
+
+    Course: Project AI - Symbolic artificial intelligence \\
+    Professor: Dr.-Ing. Stefan Fricke \\
+    Semester: SOSE23 \\
+    Date: 2023/07/26 \\
+
+    Group Members: Who the fuck cares? \\
+    Repository: https://github.com/PraxTube/chess-ai/ \\
+		
+		\vspace{8mm}
+		
+		\begin{center}
+			
+			{\Large \normalfont \bfseries Project Report} \\
+			
+			\vspace{5mm}
+			
+			{\Huge \normalfont \bfseries \header} \\
+			\vspace{7mm}
+			
+			{\Large \normalfont \bfseries \group} \\
+			\vspace{5mm}
+			
+		\end{center}
+		\vspace{2cm}
+		
+		\begin{abstract}
+			
+			\input{subfiles/abstract.tex}
+			
+		\end{abstract}
+		
+	\end{titlepage}
+	
+	\pagenumbering{Roman}
+	
+	\tableofcontents
+	
+	\pagebreak
+	
+	\pagenumbering{arabic}\setcounter{page}{1}
+
+  \section{Introduction}
+
+  \input{subfiles/introduction.tex}
+
+  \section{Progress}
+
+  \input{subfiles/progress.tex}
+
+  \section{Results}
+
+  \input{subfiles/results.tex}
+
+  \section{Issues faced}
+
+  \section{Lessons learned}
+
+  \input{subfiles/lessons-learned.tex}
+	
+	\section{Summary}
+	
+	\input{subfiles/summary.tex}
+	
+	\addcontentsline{toc}{section}{Literatur}
+	\renewcommand{\refname}{Literatur}
+	\begin{thebibliography}{xxxx}
+		\input{subfiles/sources.tex}
+	\end{thebibliography}
+	
+\end{document}
