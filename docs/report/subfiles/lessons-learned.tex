@@ -21,4 +21,32 @@ We also observed that background tasks can significantly influence the result of
 One should try to run them in the same-ish environment as possible
 (or use a server for that if possible).
 }
+  \item{
+Writing debugging tools as early as possible really pays off (same with logging tools).
+}
+  \item{
+Failing fast in the early stages of the project (using python-chess to code up a simple AI)
+created a good base knowledge about what needs to be done.
+}
+  \item{
+Writing good git commits is extremely useful for both documentation and overall work flow.
+Atomic commits are almost necessary when restructuring complex software like the chess backend.
+}
+  \item{
+Unit tests really useful when restructuring complex software as well.
+}
+  \item{
+It's important to know if something will be worthwhile
+before commiting to it if it will take a long time to complete.
+We learned this with the attempt at implementing transposition tables.
+If we would have known that the potential performance increase was about
+\~10\%, we would have probably not even tried it in the first place,
+given how much effort went into it.
+}
+  \item{
+Debugging hash tables is actually not as straightforward as it initially seemed.
+If you can't use a debugger properly then it's a real mess.
+Being able to use a debugger is very essential
+and an important tool in a software developers toolkit.
+}
 \end{itemize}
