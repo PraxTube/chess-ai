@@ -1,0 +1,24 @@
+The process of writing a chess AI is not an easy one.
+There are many things that can and will go wrong.
+That's why this was a great way to learn,
+because the first step to mastery is failure.
+The following list is a collection of lessons we learned during
+this project, they are in no particular order.
+
+\begin{itemize}
+  \item{
+Benchmarks are extremely useful,
+not only to see improvements over different versions of your code,
+but also to compare incremental changes to the code.
+We realized this when we tried to refactor the evaluation function to use numpy.
+When we had many small np.ndarray it was actually slower then the pure python list implementation.
+This is because we always have overhead when calling numpy,
+so reducing the amount of times we call numpy draws out the full potential of numpy,
+i.e. use as big as arrays as possible.
+}
+  \item{
+We also observed that background tasks can significantly influence the result of benchmarks.
+One should try to run them in the same-ish environment as possible
+(or use a server for that if possible).
+}
+\end{itemize}

@@ -1,5 +1,13 @@
 In this section we will focus on the benchmarks
 and the more tangible results of the project.
+The tests were run on a PC with the following specs
+
+\begin{itemize}
+  \item CPU: Intel i5-4590, Threads: 4, Cores: 4, 3.7GHz
+  \item RAM: 24GB DDR3
+  \item OS: Zorin 16.2 (Ubuntu based)
+\end{itemize}
+
 To start, lets take a look at \autoref{fig:pillar-plot}.
 
 \begin{figure}[hbtp]
@@ -32,11 +40,13 @@ that the end result of an AI, it's strength and speed,
 is determined by multiple factors. In this case
 the amount of nodes searched was drastically decreased
 by the AI features implemented which led to this
-overall improvement. This leads us to \autoref{fig:depth-plot}, which shows
-the time and number of nodes searched in respect to the
-depths.
+overall improvement.
 
-There we can see numbers of nodes searched (bottom plot) is significantly
+\pagebreak
+
+This leads us to \autoref{fig:depth-plot}, which shows
+the time and number of nodes searched in respect to the
+depths. Here we can see numbers of nodes searched (bottom plot) is significantly
 lower for the optimized AI compared to the advanced AI\footnote{
 The reason the dummy and basic AI seem to have less nodes searched
 is because there was a bug in the early implementations of the AI.
@@ -45,8 +55,6 @@ For that reason the dummy and basic AI's benchmarks in regard to depth
 should be taken with a grain of salt.
 }. We can also see that the overall time is smaller for the optimized AI,
 regardless of depth.
-
-\pagebreak
 
 This is actually not necessarily the case,
 for instance if we would have made poor decisions for the MCTS
