@@ -1,8 +1,5 @@
-Before we are going into the details of the
-development process, let's first look at
-an overview of what we created
-(note that you can click on the Mst name to see
-whole documentation of it).
+Before diving into the details of the
+development process, it is beneficial to first provide an overview of the final product we created. Please note that comprehensive documentation can be accessed by clicking on the respective milestone name.
 
 \begin{description}
   \item[\href{https://github.com/PraxTube/chess-ai/tree/master/docs/milestones/1-dummy-AI}{Mst1 - Dummy AI:}] \hfill
@@ -35,41 +32,15 @@ whole documentation of it).
     \end{itemize}
 \end{description}
 
-\pagebreak
-
 \subsection{Mst1 Dummy AI}
 
-This milestone was primarily about the chess backend.
-At first we used the python package
-python-chess\footnote{https://pypi.org/project/python-chess/}
-which was very useful to see what kind of structure our backend should have.
-We implemented the AI using python-chess and later when we switched the backend to our own,
-we were able to use the structure of python-chess.
-Our backend is mainly based on one other
-repo\footnote{https://github.com/Jabezng2/Star-Wars-Chess-AI-Game}
-and a youtube
-video\footnote{https://www.youtube.com/watch?v=EnYui0e73Rs}.
-Of course we also consulted the chess
-programming\footnote{https://www.chessprogramming.org/Chess}
-website to gain a deeper understanding of how a chess backend should be structured.
+The primary focus of this milestone was the development of the chess backend. Initially, we utilized the Python package python-chess\footnote{https://pypi.org/project/python-chess/}, which served as a valuable reference for structuring our own backend. We first implemented the AI using python-chess, and when we transitioned to our own backend, we were able to retain the structure provided by python-chess. Our backend was largely influenced by another repository\footnote{https://github.com/Jabezng2/Star-Wars-Chess-AI-Game} and a YouTube video\footnote{https://www.youtube.com/watch?v=EnYui0e73Rs}, which both provided crucial insights. Additionally, the Chess Programming website\footnote{https://www.chessprogramming.org/Chess} was an invaluable resource, offering a deeper understanding of the structure and functionality of a chess backend.
 
-The benchmarks were run on both our backend and the python-chess backend,
-with the goal in mind to see just how much slower our implementation is.
-To our surprise however, our backend was actually \textit{faster}.
-It's still not clear why that is, but it was very reassuring and gave us
-the confidence to continue with the project.
+We conducted benchmarks on both our backend and the python-chess backend, with the intention of comparing their performance. Contrary to our expectations, our backend demonstrated superior speed. The reason for this remains unclear, but it was a reassuring outcome that bolstered our confidence to proceed with the project.
 
-Given that his milestone was mainly about the backend,
-naturally the main issues and lessons we learned stem from
-it. Firstly, the main problem with the backend was that really
-only one person could work on it. Sure you might have been
-able to split the work of AI and backend, but having multiple
-people work on one backend just isn't a good idea.
-That is why this task was done by only one person.
-The backend ended up with 900+ lines of code in this milestone.
+As this milestone was primarily focused on the backend, the main challenges and lessons learned were inherently linked to it. One significant issue was that the backend development was essentially a single-person task. While it might have been possible to divide the work between the AI and the backend, having multiple group members working on a single backend could lead to complications. Consequently, this task was undertaken by a single team member, resulting in over 900 lines of code in this milestone.
 
-For this first iteration of the backend we only went with the most
-necessary features, we didn't implement the following:
+In this initial iteration of the backend, we focused on implementing the most essential features, leaving out the following:
 
 \begin{itemize}
   \item{King of the hill condition}
@@ -78,119 +49,47 @@ necessary features, we didn't implement the following:
   \item{Fen loading only semi-working}
 \end{itemize}
 
-The code base of the backend was also really messy with
-inconsistent naming, redundant code, many nested if's and for's
-and hard to debug methods. However this was to be expected
-and was cleaned up in later milestones. It's also worth
-noting that this is actually the better way to developing
-software in general (at least for in my experience):
+The initial code base for the backend was admittedly disorganized, characterized by inconsistent naming conventions, redundant code, complex nested conditional and loop statements, and methods that were challenging to debug. However, this was anticipated and subsequently addressed in later milestones. It's worth noting that this approach aligns with a common software development strategy that has proven effective in my experience:
 
-Write whatever software you need, following only the happy
-path\footnote{https://en.wikipedia.org/wiki/Happy\_path}
-until it works. If you notice that you can restructure the code,
-do it. Once that is done you can go back and add all the
-checks and validations.
-This worked really well in pretty much all of our milestones.
-It's essentially like a fail fast
-approach.\footnote{https://en.wikipedia.org/wiki/Fail-fast}
-
-\pagebreak
+The strategy involves initially developing the software to follow the "happy path"\footnote{https://en.wikipedia.org/wiki/Happy\_path} until it functions as intended. Any potential restructuring of the code is undertaken as and when it is identified. Once this is accomplished, additional checks and validations can be incorporated. This approach was highly effective across all our milestones, essentially embodying a "fail-fast"\footnote{https://en.wikipedia.org/wiki/Fail-fast} methodology.
 
 \subsection{Mst2 - Basic AI}
 
+Despite the limited timeframe of two weeks for this milestone, we made notable modifications to both the backend and the AI. The backend was updated to represent the board using arrays of integers instead of strings, enhancing speed and facilitating quick evaluations with numpy arrays, a crucial aspect for the subsequent milestone. We also restructured the backend to favor functional programming\footnote{https://en.wikipedia.org/wiki/Functional\_programming} over object-oriented programming\footnote{https://en.wikipedia.org/wiki/Object-oriented\_programming}, enhancing its efficiency. Furthermore, we divided some methods into smaller ones to improve logical flow and readability.
 The time on this milestone was only 2 weeks, so there wasn't too much
 progress compared to the first one.
-However there were nonetheless changes to both the backend and the AI.
-Firstly, the backend uses arrays of integers to represent
-the board instead of strings now. This is not only faster,
-but it allows to quickly calculate evaluations using numpy arrays
-which is very important for the next milestone.
-We restructured the backend to use less
-OOP\footnote{https://en.wikipedia.org/wiki/Object-oriented\_programming}
-and more
-FP\footnote{https://en.wikipedia.org/wiki/Functional\_programming}.
-In addition we split some methods into smaller ones to increase
-logical flow and readability.
 
 These changes had a minor increase in performance but a massive
-increase in readability and scalability, as we will see later.
-Refactoring at least a bit every day was a good way to make
-progress here. This way you are not meet with the daunting
-task of restructuring a huge code base, but rather improvement
-it step by step.
-This rule only works in the early stages (prototype stages) of a
-project though, as you don't want to mess with a big code base
-that is potentially getting worked on by other people or even
-yourself on other side branches.
+increase in readability and scalability, as will be evident in subsequent stages. 
+Adopting a strategy of daily refactoring proved beneficial, allowing for incremental progress rather than confronting the daunting task of overhauling a large code base all at once. However, it's important to note that this approach is most effective during the early or prototype stages of a project. It is less advisable to apply this strategy to a substantial code base that is concurrently being worked on by other team members or across different branches.
 
-The AI got some noticeable improvements as well.
-We went from the minimax algorithm to alpha-beta,
-which seemed to be actually slower in our AI,
-however we later on realized that there was a bug in
-our move ordering, and so our alpha-beta was
-actually significantly faster then the minimax
-implementation.
-Apart from the performance the strength of the AI
-also increased by adding
-PeSTO\footnote{https://www.chessprogramming.org/PeSTO\%27s\_Evaluation\_Function}
-to the evaluation. This change was computationally very
-expensive with our naive version, we will look at how we
-improved that in the next milestone.
-The time management was also improved from using
-a constant time every move to allocating time
-depending on the stage of the game and the time available
-(less time for early moves, lots of time for mid-late game moves).
+The AI also underwent significant enhancements during this phase. We transitioned from the minimax algorithm to alpha-beta pruning. Initially, this appeared to slow down our AI, but we later discovered a bug in our move ordering. Once rectified, our alpha-beta pruning implementation proved to be considerably faster than the minimax approach.
+
+In addition to performance improvements, the AI's strength was augmented by incorporating the PeSTO\footnote{https://www.chessprogramming.org/PeSTO\%27s\_Evaluation\_Function} evaluation function. Although this modification significantly increased computational demands with our initial version, we will discuss how we optimized this in the subsequent milestone.
+
+We also refined the AI's time management strategy. Instead of allocating a constant amount of time for each move, we adjusted the time allocation based on the stage of the game and the remaining time (less time for early moves, more time for mid-to-late game moves).
 
 \subsection{Mst3 - Advanced AI}
 
-This milestone was the most productive out of all of them
-(we also had the most time for this one).
-The backend received a huge restructure\footnote{
-See the class diagram in \autoref{fig:class-diagram}.
-}, we cleaned up
-all the names to use snake\_casing consistently, we
-replaced boilerplate heavy classes with smaller
-datastructures such as
-lists\footnote{Using numpy arrays in most instances
+This milestone was the most productive, aided by the fact that we had the most time allocated for it. The backend underwent a substantial restructuring, as detailed in the class diagram in \autoref{fig:class-diagram}. We standardized all names to use snake\_casing consistently and replaced complex classes with simpler data structures, such as lists\footnote{Using numpy arrays in most instances
 was actually slower then pure python lists. The reason
 for this is that indexing into numpy arrays is pretty
 slow and most of the time we had to loop through
-the lists and index the elements.}, we added
-guard
-clauses\footnote{https://en.wikipedia.org/wiki/Guard\_(computer\_science)}
-whenever possible to increase readability and reduce
-indentation and finally we got rid of the string
-board representation entirely and used only integers
-instead.\footnote{For a more detailed description see the commits in https://github.com/PraxTube/chess-ai/pull/37/commits}
+the lists and index the elements.}. Interestingly, we found that using numpy arrays was often slower than pure Python lists due to the time-consuming indexing process.
 
-The AI increased both in performance and in strength during
-this milestone. We implemented a proper king of the hill
-win condition to the evaluation (and to the backend),
-we refactored the move ordering to be much faster
-(at the cost of being less accurate, a worthwhile trade),
-made some slight tweaks to the time management and we most
-importantly tried to implement transposition table. However
-that last point went horribly wrong.
+We also incorporated guard clauses\footnote{https://en.wikipedia.org/wiki/Guard\_(computer\_science)} wherever possible to enhance readability and reduce indentation. Finally, we eliminated the string board representation entirely, opting to use only integers instead. For a more detailed description of these changes, please refer to the commits in the provided GitHub link\footnote{For a more detailed description see the commits in https://github.com/PraxTube/chess-ai/pull/37/commits}.
 
-The issue with the transposition table was that we had
-way too many collision for the number of boards that were being hashed.
-For roughly 10k boards that were hashed there were around 20 collisions.
-If you didn't wipe the table after each ply,
-then the number of collisions would skyrocket after that,
-to the point were searching 50k boards resulted in 25k collisions,
-so 50\%. Any type of collision handling would be more then futile here.
+During this milestone, the AI demonstrated improvements in both performance and strength. We incorporated a proper king of the hill win condition into the evaluation and backend, refactored the move ordering to enhance speed (albeit at the expense of some accuracy, a trade-off we deemed worthwhile), and made minor adjustments to the time management. Most significantly, we attempted to implement a transposition table, but this effort was fraught with challenges.
 
-It goes without saying that something must be going wrong here,
-though if we consider the birthday
-paradox\footnote{https://en.wikipedia.org/wiki/Birthday\_problem},
-then it doesn't seem so bizarre actually.
-Using the rule of thumb of 
+The primary issue with the transposition table was an excessive number of collisions relative to the number of hashed boards. For approximately 10,000 hashed boards, there were around 20 collisions. If the table was not cleared after each ply, the number of collisions would surge dramatically. For instance, searching 50,000 boards resulted in 25,000 collisions, a collision rate of 50\%. Any attempt at collision handling under these circumstances would be futile.
+
+It is evident that there are issues to be addressed in this scenario. However, when considering the birthday paradox, the situation may not be as unusual as it initially appears. Applying the rule of thumb, we find that
 
 $$ p \approx \frac{n^2}{2m} $$
 
 with the probability of collisions $p$,
 the number of boards hashed $n$ and the amount of entries in the board $m$.
-In our case we have:
+In our specific scenario, the following parameters apply:
 
 \begin{align*}
 m &= 2^{24} \\
@@ -198,69 +97,26 @@ p &= \frac{1}{2} \\
 n &\implies \sqrt{2 \cdot p \cdot m} = \sqrt{2^{24}} = 2^{12} = 4096
 \end{align*}
 
-so if we hash 4096 boards we should expect that there
-will be at least one collision with a chance of 50\%.
-So collisions with the number of boards we hashed are actually extremely likely,
-and given that they grow exponentially,
-it's not too surprising to find these huge numbers of collisions.
-Though there was still likely a bug in our implementation
-because we had significantly more.
+Given these parameters, if we hash 4096 boards, we should anticipate at least one collision with a probability of 50\%. Therefore, collisions are not only extremely likely with the number of boards we hashed, but their occurrence is expected to increase exponentially. This explains the substantial number of collisions we encountered. However, the excessive frequency suggests there may have been a bug in our implementation.
 
-What is the solution to this problem?
-Avoidance, after trying out many
-things\footnote{https://github.com/PraxTube/chess-ai/blob/master/docs/milestones/3-advanced-AI/transposition-tables.md\#trying-to-solve-the-problem}
-things to solve the issue,
-we eventually settled to simply take our losses and not implement transposition-tables.
-Funnily enough, had we taken some time to research how effective the transposition-tables
-would have been, we would have realized that even a working implementation would
-have at best given a 10\% to 20\% boost in performance.
+How did we address this issue? Ultimately, we chose avoidance. After exploring numerous potential solutions\footnote{https://github.com/PraxTube/chess-ai/blob/master/docs/milestones/3-advanced-AI/transposition-tables.md\#trying-to-solve-the-problem}, we decided to accept the limitations of our approach and forego the implementation of transposition tables. Interestingly, had we conducted a preliminary analysis of the potential effectiveness of transposition tables, we would have discovered that even a successful implementation would have resulted in a modest performance boost of 10% to 20% at best.
 
-This milestone, even with that setback, was still the most productive
-of them all.
+Despite this setback, this milestone remained the most productive of all.
 
 \subsection{Mst4 - Optimized AI}
 
-In this milestone we focused on optimizing the AI rather
-then refactoring anything about the backend. We didn't face any major
-issues during this process of the project, probably
-because we worked more smoothly together and because
-the features we implemented were already somewhat
-covered in other courses.
+During this milestone, our efforts were primarily directed towards optimizing the AI, rather than refactoring the backend. We encountered no significant obstacles during this phase of the project, likely due to our increasingly efficient collaboration and the fact that the features we implemented had been partially addressed in other courses.
 
-For instance we implemented
-MCTS\footnote{https://en.wikipedia.org/wiki/Monte\_Carlo\_tree\_search}
-which some members of the team already covered in a separate
-course\footnote{The courses we are referring to is \textit{Einfuehrung in die KI}
-and \textit{Cognitive Algorithms}, though primarily the former one.}.
-This actually allowed us to implement it fairly fast without any major hiccups.
-The main challenge here was to balance exploration and exploitation effectively
-to improve the AI's decision-making.
-Additionally, tuning the exploration parameter
-and the number of simulations proved to be crucial for achieving good performance.
-Though given that we were already quite familiar with MCTS
-we managed to overcome this challenge and integrate it successfully into our AI.
+For example, we implemented the Monte Carlo Tree Search (MCTS)\footnote{https://en.wikipedia.org/wiki/Monte\_Carlo\_tree\_search}, a topic some team members had already explored in a separate courses\footnote{The courses we are referring to is \textit{Einfuehrung in die KI}
+and \textit{Cognitive Algorithms}}. This prior knowledge facilitated a swift and smooth implementation without any significant issues. The primary challenge was effectively balancing exploration and exploitation to enhance the AI's decision-making capabilities. Furthermore, fine-tuning the exploration parameter and the number of simulations was crucial for optimizing performance. However, given our existing familiarity with MCTS, we were able to successfully navigate these challenges and integrate it effectively into our AI.
 
-PVS\footnote{https://www.chessprogramming.org/Principal\_Variation\_Search}
-combined with
-negamax\footnote{https://www.chessprogramming.org/Negamax}
-was the hardest feature to implement.
-The primary challenge we encountered was understanding the intricacies of the algorithm.
-Ensuring the correctness and efficiency of our PVS/negamax implementation
-was the main obstacle.
-However, with thorough research and trail and error,
-we were able to overcome these challenges successfully
-We also had some problems when implementing this feature in our code base simply because the AI framework was pretty bad.
-While we did refactor the chess backend in the previous milestone,
-we didn't do the same for the AI (though to be fair, the AI is much less complex).
-So we also restructured the AI framework (partially) with the features we implemented in this milestone.
+The implementation of Principal Variation Search (PVS)\footnote{https://www.chessprogramming.org/Principal\_Variation\_Search} in conjunction with Negamax\footnote{https://www.chessprogramming.org/Negamax} presented the most significant challenge. The primary difficulty lay in comprehending the complexities of the algorithm and ensuring the accuracy and efficiency of our PVS/Negamax implementation. However, through diligent research and a process of trial and error, we were able to successfully navigate these challenges.
 
-The nullsearch was another feature we implemented during this milestone.
-The main challenge here was determining when and where to apply null moves
-and ensuring that the search results remained accurate.
-Tuning the nullmove heuristic and fine-tuning the implementation took some time,
-but we managed to integrate nullsearch into our AI effectively.
+We also encountered difficulties when integrating this feature into our existing code base, primarily due to the limitations of our AI framework. While we had refactored the chess backend in the previous milestone, we had not done the same for the AI. However, it's worth noting that the AI is inherently less complex. Consequently, we partially restructured the AI framework in conjunction with the features implemented in this milestone.
 
-Finally we made some improvements to the evaluation:
+Another feature we introduced during this milestone was the nullsearch. The primary challenge associated with this feature was identifying the appropriate circumstances and locations for applying null moves while maintaining the accuracy of the search results. The process of tuning the nullmove heuristic and refining the implementation required some time, but we were ultimately successful in incorporating nullsearch into our AI.
+
+Lastly, we made several enhancements to the evaluation:
 
 \begin{itemize}
   \item{Check if it's late game, if so, use different PeSTO table}
@@ -269,18 +125,6 @@ Finally we made some improvements to the evaluation:
   \item{Pigs on the 7th rank (rooks on 7th rank)}
 \end{itemize}
 
-While the above additions make the evaluation slower overall,
-we think that it was a good trade-off for a stronger AI.
-Fine tuning a few hyperparameters (through research and trial and error)
-also helped to increase the strength without any trade-offs.
-We also tried to implement mobility evaluation,
-however in our case it was just way too slow so we removed it.
-Also, checking if two bishops are present was too slow
-(compared to the benefit it provided).
+While the aforementioned additions to the evaluation process resulted in slower overall performance, we believe this trade-off was justified by the enhanced strength of the AI. The fine-tuning of several hyperparameters, achieved through research and trial and error, also contributed to the AI's increased strength without any negative trade-offs. We attempted to implement mobility evaluation, but it proved to be excessively slow in our case, leading us to discard it. Similarly, the process of checking for the presence of two bishops was too slow relative to the benefit it provided.
 
-The reason some features in the evaluation worked well
-and others didn't was mainly a question about can we vectorize it properly with numpy.
-Features that required calculations that could
-be cleverly put into one single numpy call worked the best.
-On the other, features that only required checks
-with loops over the board were simply to slow compared to the rest.
+The effectiveness of certain features in the evaluation largely hinged on our ability to properly vectorize them with numpy. Features that required calculations that could be efficiently executed in a single numpy call were the most successful. Conversely, features that required loop-based checks over the board were simply too slow compared to the rest.

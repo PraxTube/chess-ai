@@ -1,24 +1,22 @@
-This is a collection of issues that we faced throughout
-the project. They are in no particular order,
-though they are somewhat implicitly ordered
-by milestone 1 to milestone 4.
+This section presents a compilation of challenges we encountered throughout the project. While they are not arranged in a specific order, they implicitly follow the sequence of milestones from one to four.
 
 \begin{itemize}
-  \item Team coordination (mainly due to the fact that only really one person can work on the engine)
-  \item{Writing the chess engine and debugging it was difficult,
-  a more guided approach would have been better instead of trial and error}
-  \item Writing unit tests early wasn't very useful
-  \item Getting started was the hardest part, as we didn't quite know what to do (where to begin)
-  \item{Using numpy mindlessly doesn't automatically make your code faster
-  (it can actually make it slower!)}
-  \item{OOP is really annoying to work with,
-  especially if the design of the software is not to clear}
-  \item Having huge functions with large logical statements
-  \item Changing too many things at once (as opposed to having atomic changes)
-  \item Commiting to things that don't pay off in the end
+\item Balancing the trade-off between the ease of prototyping in Python and its slower execution speed.
+\item Working with Object-Oriented Programming (OOP) can be challenging, particularly when the software design lacks clarity.
+\item The process of writing and debugging the chess engine was challenging. A more structured approach would have been preferable to trial and error.
+\item Early unit testing proved to be less beneficial than anticipated.
+\item The initial phase was the most difficult, as we were uncertain about where to begin.
+\item The indiscriminate use of numpy does not automatically enhance code performance and can, in fact, slow it down.
+\item Dealing with extensive functions with large logical statements.
+\item Implementing advanced AI algorithms, such as Principal Variation Search (PVS) and Monte Carlo Tree Search (MCTS), in a way that effectively improved the AI's performance.
+\item Dealing with the complexities of implementing a transposition table, including handling hash collisions.
+\item Ensuring the accuracy and efficiency of the AI's evaluation process, particularly when introducing new features.
+\item Managing the project's scope and complexity, especially when adding new features or making significant changes to the AI or backend.
+\item Overcoming the limitations of the initial AI framework and restructuring it to accommodate new features.
+\item Making multiple changes simultaneously, as opposed to implementing atomic changes.
+\item Committing to tasks that ultimately did not yield significant benefits.
+\item Coordinating team efforts, primarily due to the fact that the engine could effectively be worked on by only one person at a time.
+\item Navigating and resolving GitHub merge conflicts among team members, which required a clear understanding of the code changes made by each individual and effective communication to ensure that important updates were not inadvertently discarded.
 \end{itemize}
 
-Most of these issues were very useful in the sense
-that they made for great learning opportunities.
-The lessons we learned during this project
-is what we will be discussing in the following chapter.
+Despite these challenges, most provided valuable learning opportunities. The lessons we gleaned from this project will be discussed in the subsequent chapter.

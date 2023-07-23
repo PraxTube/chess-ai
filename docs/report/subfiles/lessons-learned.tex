@@ -1,61 +1,22 @@
-The process of writing a chess AI is not an easy one.
-There are many things that can and will go wrong.
-That's why this was a great way to learn,
-because the first step to mastery is failure.
-The following list is a collection of lessons we learned during
-this project, they are in no particular order.
+The development of a chess AI presents a multitude of challenges, making it a fertile ground for learning. Failure is often the first step towards mastery, and this project was no exception. The following list encapsulates the key lessons we gleaned from this project, presented in no particular order:
 
 \begin{itemize}
-  \item{
-Benchmarks are extremely useful,
-not only to see improvements over different versions of your code,
-but also to compare incremental changes to the code.
-We realized this when we tried to refactor the evaluation function to use numpy.
-When we had many small np.ndarray it was actually slower then the pure python list implementation.
-This is because we always have overhead when calling numpy,
-so reducing the amount of times we call numpy draws out the full potential of numpy,
-i.e. use as big as arrays as possible.
-}
-  \item{
-We also observed that background tasks can significantly influence the result of benchmarks.
-One should try to run them in the same-ish environment as possible
-(or use a server for that if possible).
-}
-  \item{
-Writing debugging tools as early as possible really pays off (same with logging tools).
-}
-  \item{
-Failing fast in the early stages of the project (using python-chess to code up a simple AI)
-created a good base knowledge about what needs to be done.
-}
-  \item{
-Writing good git commits is extremely useful for both documentation and overall work flow.
-Atomic commits are almost necessary when restructuring complex software like the chess backend.
-}
-  \item{
-Unit tests really useful when restructuring complex software as well.
-}
-  \item{
-It's important to know if something will be worthwhile
-before commiting to it if it will take a long time to complete.
-We learned this with the attempt at implementing transposition tables.
-If we would have known that the potential performance increase was about
-\~10\%, we would have probably not even tried it in the first place,
-given how much effort went into it.
-}
-  \item{
-Debugging hash tables is actually not as straightforward as it initially seemed.
-If you can't use a debugger properly then it's a real mess.
-Being able to use a debugger is very essential
-and an important tool in a software developers toolkit.
-}
-  \item{
-Writing your own chess AI is much more work then it initially seems like.
-Not only do you have to write your own chess backend, you also have
-to make sure the AI works as intended, you will also have to debug
-both the AI and the backend and benchmark regularly to assert that
-you are going in the right direction. I am sure this is not only true
-for chess AI's but in general for creating your own AI. And we didn't even touch
-machine learning yet, how very interesting.
-}
+\item Benchmarks are invaluable, not only for tracking improvements across different code versions but also for comparing the impact of incremental changes. This became evident during our attempt to refactor the evaluation function using numpy.
+\item Effective team coordination is crucial, especially when working on complex projects like a chess AI. Clear communication and division of tasks can help prevent misunderstandings and ensure that everyone is on the same page.
+\item Resolving merge conflicts on GitHub can be challenging, but it's an essential skill for collaborative software development. It's important to understand the changes made by each team member and ensure that important updates are not accidentally discarded.
+\item It's important to be flexible and adaptable in your approach. If a particular method or tool isn't working as expected, don't be afraid to try something different.
+\item Research is a critical part of the development process. Understanding the underlying principles and algorithms can help you make more informed decisions and avoid potential pitfalls.
+\item Regularly reviewing and refactoring your code can lead to improvements in both performance and readability. It can also make it easier to add new features or make changes in the future.
+\item It's important to balance the pursuit of optimal performance with the practical limitations of your chosen programming language and tools. Sometimes, the most efficient solution may not be the most practical one.
+\item Implementing advanced features and algorithms can significantly improve the performance of your AI, but it's important to understand these features thoroughly to avoid introducing new issues or inefficiencies.
+\item The influence of background tasks on benchmark results should not be underestimated. Consistency in the testing environment is crucial for obtaining reliable results.
+\item Developing debugging and logging tools early in the project can significantly streamline the development process.
+\item Adopting a 'fail fast' approach in the project's early stages, such as using python-chess to create a simple AI, can provide a solid foundation for future development.
+\item Writing clear and concise git commits is crucial for both documentation and workflow. Atomic commits are particularly beneficial when restructuring complex software like the chess backend.
+\item Unit tests are invaluable when restructuring complex software.
+\item Before committing to a task that requires significant time and effort, it's important to assess whether the potential benefits justify the investment. Our attempt to implement transposition tables served as a lesson in this regard.
+\item Debugging hash tables can be more complex than it initially appears. Proficiency in using a debugger is a vital skill for software developers.
+\item Creating a chess AI is a more demanding task than it may initially seem. It involves not only writing the chess backend and ensuring the AI functions as intended, but also debugging both the AI and the backend, and regularly benchmarking to ensure progress is on track. This observation likely extends to the creation of AI in general, even without venturing into the realm of machine learning.
 \end{itemize}
+
+These points reflect the diverse range of technical and project management lessons we learned during the development of the chess AI.
